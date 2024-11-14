@@ -1,4 +1,5 @@
 import { ComposedChart, XAxis, YAxis, Tooltip, Legend, CartesianGrid, Area, Bar } from 'recharts';
+import { XlsxImport } from '@compass/xlsx-import'; // Add this import
 
 const areaDot = {stroke: '#ffe5a9', strokeWidth: 2, fill: 'white', r: 5}
 
@@ -52,6 +53,9 @@ export function App() {
           <Bar dataKey="before" name="Confidence (Before)" barSize={20} fill="#8db1d3"/>
           <Bar dataKey="after" name="Confidence (After)" barSize={20} fill="#50cb71"/>
         </ComposedChart>
+      </div>
+      <div className="flex justify-center items-center min-h-screen bg-gray-50 p-8">
+        <XlsxImport />
       </div>
     </div>
   );
