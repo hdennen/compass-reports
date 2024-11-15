@@ -8,11 +8,5 @@
       "import": "./index.mjs",
       "require": "./index.js"
     }
-  },
-  "dependencies": {
-    "papaparse": "^5.4.1"
-  },
-  "devDependencies": {
-    "@types/papaparse": "^5.3.15"
   }
 }
