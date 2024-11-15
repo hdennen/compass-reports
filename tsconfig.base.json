@@ -15,6 +15,7 @@
     "skipDefaultLibCheck": true,
     "baseUrl": ".",
     "paths": {
+      "@compass/csv-import": ["libs/csv-import/src/index.ts"],
       "@compass/xlsx-import": ["libs/xlsx-import/src/index.ts"]
     }
   },
