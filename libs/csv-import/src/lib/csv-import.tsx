@@ -13,14 +13,14 @@ export function CsvImport() {
             reader.onload = (event) => {
               const csvData = event.target?.result as string;
               if (csvData) {
-                let headers: string[] = [];
+                const headers: string[] = [];
                 // Parse CSV with PapaParse
                 Papa.parse(csvData, {
                   header: true,
                   skipEmptyLines: true,
                   transformHeader: (header: string, index: number) => {
                     // If header is empty, use previous header
-                    if (header == "") {
+                    if (header === "") {
                       header = headers[index -1]
                     }
                     headers.push(header);
