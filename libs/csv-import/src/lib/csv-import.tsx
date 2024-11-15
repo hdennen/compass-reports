@@ -1,0 +1,46 @@
+import Papa from 'papaparse';
+
+export function CsvImport() {
+  return (
+    <div>
+      <input
+        type="file"
+        accept=".csv"
+        onChange={(e) => {
+          const file = e.target.files?.[0];
+          if (file) {
+            const reader = new FileReader();
+            reader.onload = (event) => {
+              const csvData = event.target?.result as string;
+              if (csvData) {
+                let headers: string[] = [];
+                // Parse CSV with PapaParse
+                Papa.parse(csvData, {
+                  header: true,
+                  skipEmptyLines: true,
+                  transformHeader: (header, index) => {
+                    // If header is empty, use previous header
+                    if (header == "") {
+                      header = headers[index -1]
+                    }
+                    headers.push(header);
+                    return header;
+                  },
+                  complete: (results) => {
+                    console.log('Parsed CSV:', results.data);
+                  },
+                  error: (error) => {
+                    console.error('Error parsing CSV:', error);
+                  }
+                });
+              }
+            };
+            reader.readAsText(file);
+          }
+        }}
+      />
+    </div>
+  );
+}
+
+export default CsvImport;

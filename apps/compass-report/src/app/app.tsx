@@ -1,7 +1,5 @@
-import { XlsxImport } from '@compass/xlsx-import'; // Add this import
 import ConfidenceChart from '../charts/confidence';
-
-const areaDot = {stroke: '#ffe5a9', strokeWidth: 2, fill: 'white', r: 5}
+import { CsvImport } from '@compass/csv-import'
 
 const data = [
   {
@@ -40,10 +38,14 @@ const data = [
 
 export function App() {
   return (
-    <div className="flex justify-center items-center min-h-screen bg-gray-50 p-8">
-      <ConfidenceChart data={data} />
-      <div className="flex justify-center items-center min-h-screen bg-gray-50 p-8">
-      <XlsxImport />
+    <div>
+      <div className="flex flex-col justify-center items-center min-h-screen bg-gray-50 p-8">
+        <div className="mb-8">
+          <ConfidenceChart data={data} />
+        </div>
+        <div>
+          <CsvImport />
+        </div>
       </div>
     </div>
   );

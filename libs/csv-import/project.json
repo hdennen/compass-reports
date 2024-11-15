@@ -1,0 +1,9 @@
+{
+  "name": "csv-import",
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "libs/csv-import/src",
+  "projectType": "library",
+  "tags": [],
+  "// targets": "to see all targets run: nx show project csv-import --web",
+  "targets": {}
+}
