@@ -18,7 +18,7 @@ export function CsvImport() {
                 Papa.parse(csvData, {
                   header: true,
                   skipEmptyLines: true,
-                  transformHeader: (header, index) => {
+                  transformHeader: (header: string, index: number) => {
                     // If header is empty, use previous header
                     if (header == "") {
                       header = headers[index -1]
@@ -29,7 +29,7 @@ export function CsvImport() {
                   complete: (results) => {
                     console.log('Parsed CSV:', results.data);
                   },
-                  error: (error) => {
+                  error: (error: Papa.ParseError) => {
                     console.error('Error parsing CSV:', error);
                   }
                 });
