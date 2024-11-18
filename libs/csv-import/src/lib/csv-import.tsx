@@ -1,6 +1,13 @@
 import Papa from 'papaparse';
+interface CsvImportProps<T> {
+  store: T;
+}
 
-export function CsvImport() {
+export function CsvImport<T extends { 
+  setRawData: (data: any[]) => void, 
+  setError: (error: any) => void,
+  setLoading: (loading: boolean) => void}
+  >({ store }: CsvImportProps<T>) {
   return (
     <div>
       <input
@@ -27,10 +34,12 @@ export function CsvImport() {
                     return header;
                   },
                   complete: (results) => {
-                    console.log('Parsed CSV:', results.data);
+                    store.setRawData(results.data);
                   },
                   error: (error: Papa.ParseError) => {
+                    // todo: global logger with log level flags.
                     console.error('Error parsing CSV:', error);
+                    store.setError(error);
                   }
                 });
               }
