@@ -40,11 +40,9 @@ export const useAssessmentStore = create<AssessmentState & AssessmentActions>((s
 function transformToNestedStructure(rawData: any[], primaryKey: string = 'Respondent ID'): any {
   const dataMap: {[key: string]: dataEntry} = {};
 
-  const headers = rawData.shift();
-  // const subHeaders = rawData.shift();
-
-  console.log(headers);
-  // console.log(subHeaders);
+  const subHeaders = rawData.shift();
+  console.log(subHeaders);
+  console.log(rawData);
 
   rawData.forEach(item => {
     for (const key in item) {
