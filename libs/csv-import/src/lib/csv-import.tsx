@@ -3,16 +3,20 @@ interface CsvImportProps<T> {
   store: T;
 }
 
-export function CsvImport<T extends { 
-  setRawData: (data: any[]) => void, 
-  setError: (error: any) => void,
-  setLoading: (loading: boolean) => void}
+interface AssessmentActions {
+  setRawData: (data: any[]) => void;
+  setLoading: (loading: boolean) => void;
+  setError: (error: string | null) => void;
+  transformData: () => void;
+}
+
+export function CsvImport<T extends AssessmentActions
   >({ store }: CsvImportProps<T>) {
   return (
     <div>
       <input
         type="file"
-        accept=".csv"
+        accept=".csv, .tsv"
         onChange={(e) => {
           const file = e.target.files?.[0];
           if (file) {
@@ -25,8 +29,10 @@ export function CsvImport<T extends {
                 Papa.parse(csvData, {
                   header: true,
                   skipEmptyLines: true,
+                  quoteChar: '"',
+                  escapeChar: '\\',
+                  fastMode: false,
                   transformHeader: (header: string, index: number) => {
-                    // If header is empty, use previous header
                     if (header === "") {
                       header = headers[index -1]
                     }
@@ -35,6 +41,8 @@ export function CsvImport<T extends {
                   },
                   complete: (results) => {
                     store.setRawData(results.data);
+                    store.transformData();
+                    console.log(results.data);
                   },
                   error: (error: Papa.ParseError) => {
                     // todo: global logger with log level flags.
