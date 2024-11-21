@@ -2,12 +2,12 @@ import { create } from 'zustand';
 
 interface AssessmentState {
   rawData: { [key: string]: string }[]; 
-  transformedData: { [key: string]: string | number | boolean | { [key: string]: string } }[];
+  transformedData: dataEntry<dataEntry>[];
   isLoading: boolean;
   error: string | null;
 }
 
-interface dataEntry<T = string | number | boolean> {
+interface dataEntry<T = string | number | boolean | dataEntry<any>> {
   [key: string]: T;
 }
 
@@ -33,13 +33,12 @@ export const useAssessmentStore = create<AssessmentState & AssessmentActions>((s
       set({ transformedData: transformed });
     } catch (error) {
       set({ error: error instanceof Error ? error.message : 'Failed to transform data' });
+      console.error(error);
     }
   },
 }));
 
-function transformToNestedStructure(rawData: any[], primaryKey: string = 'Respondent ID'): dataEntry<dataEntry>[] {
-  const dataMap: {[key: string]: dataEntry } = {};
-
+function transformToNestedStructure(rawData: any[]): dataEntry<dataEntry>[] {
   const subHeaders = rawData.shift();
   console.log(subHeaders);
 
@@ -48,7 +47,7 @@ function transformToNestedStructure(rawData: any[], primaryKey: string = 'Respon
 
   const transformedToConsolidatedHeaders = consolidateHeaders(transformedToRecordsAsObjects);
   console.log(transformedToConsolidatedHeaders);
-  return Object.values(dataMap);
+  return transformedToConsolidatedHeaders
 }
 
 function consolidateSubHeadersIntoRawData(rawData: dataEntry<dataEntry>[], subHeaders: dataEntry): dataEntry<dataEntry>[] {
@@ -64,9 +63,27 @@ function consolidateSubHeadersIntoRawData(rawData: dataEntry<dataEntry>[], subHe
   return transformed;
 }
 
-function consolidateHeaders(subHeaderedDataRecords: dataEntry<dataEntry>[]): dataEntry<dataEntry[]>[] {
+function consolidateHeaders(subHeaderedDataRecords: dataEntry<dataEntry>[]): dataEntry<dataEntry>[] {
+  const consolidatedDataRecords: dataEntry<dataEntry>[] = [];
   
-  
+  subHeaderedDataRecords.forEach(record => {
+    const consolidatedRecord: dataEntry<dataEntry> = {};
 
-  return dataMap;
+    for (const key in record) {
+      if (record.hasOwnProperty(key)) {
+        const value = record[key];
+        const splitKey = key.split(/_(?=\d)/);
+
+        if (splitKey.length > 1) {
+          consolidatedRecord[splitKey[0]] = Object.assign(consolidatedRecord[splitKey[0]], value);
+        } else {
+          consolidatedRecord[key] = value;
+        }
+        
+      }
+    }
+    consolidatedDataRecords.push(consolidatedRecord);
+  });
+
+  return consolidatedDataRecords;
 }
