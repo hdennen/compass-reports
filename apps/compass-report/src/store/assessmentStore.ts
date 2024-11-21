@@ -7,7 +7,7 @@ interface AssessmentState {
   error: string | null;
 }
 
-interface dataEntry<T = string | number | boolean | dataEntry<any>> {
+export interface dataEntry<T = string | number | boolean | dataEntry<any>> {
   [key: string]: T;
 }
 
@@ -16,6 +16,13 @@ export interface AssessmentActions {
   setLoading: (loading: boolean) => void;
   setError: (error: string | null) => void;
   transformData: () => void;
+}
+
+export enum ConfidenceLevel {
+  'Very limited' = 1,
+  'Foundational' = 2,
+  'Advanced' = 3,
+  'Expert' = 4
 }
 
 export const useAssessmentStore = create<AssessmentState & AssessmentActions>((set, get) => ({
