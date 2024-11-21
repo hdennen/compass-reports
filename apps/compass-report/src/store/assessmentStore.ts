@@ -1,14 +1,14 @@
 import { create } from 'zustand';
 
 interface AssessmentState {
-  rawData: any[]; // Replace 'any' with your specific data type
-  transformedData: { [key: string]: string | number | boolean  }[];
+  rawData: { [key: string]: string }[]; 
+  transformedData: { [key: string]: string | number | boolean | { [key: string]: string } }[];
   isLoading: boolean;
   error: string | null;
 }
 
-interface dataEntry {
-  [key: string]: string | number | boolean;
+interface dataEntry<T = string | number | boolean> {
+  [key: string]: T;
 }
 
 export interface AssessmentActions {
@@ -37,22 +37,36 @@ export const useAssessmentStore = create<AssessmentState & AssessmentActions>((s
   },
 }));
 
-function transformToNestedStructure(rawData: any[], primaryKey: string = 'Respondent ID'): any {
-  const dataMap: {[key: string]: dataEntry} = {};
+function transformToNestedStructure(rawData: any[], primaryKey: string = 'Respondent ID'): dataEntry<dataEntry>[] {
+  const dataMap: {[key: string]: dataEntry } = {};
 
   const subHeaders = rawData.shift();
   console.log(subHeaders);
-  console.log(rawData);
 
-  rawData.forEach(item => {
+  const transformedToRecordsAsObjects = consolidateSubHeadersIntoRawData(rawData, subHeaders);
+  console.log(transformedToRecordsAsObjects);
+
+  const transformedToConsolidatedHeaders = consolidateHeaders(transformedToRecordsAsObjects);
+  console.log(transformedToConsolidatedHeaders);
+  return Object.values(dataMap);
+}
+
+function consolidateSubHeadersIntoRawData(rawData: dataEntry<dataEntry>[], subHeaders: dataEntry): dataEntry<dataEntry>[] {
+  const transformed = rawData.map(item => {
     for (const key in item) {
-      if (item.hasOwnProperty(key)) {
-        if (item[key] === "Response") {
-          
-        }
+      if (item.hasOwnProperty(key) && subHeaders[key] !== "") {
+        item[key] = { [String(subHeaders[key])]: item[key] };
       }
     }
+    return item;
   });
 
-  return Object.values(dataMap);
+  return transformed;
+}
+
+function consolidateHeaders(subHeaderedDataRecords: dataEntry<dataEntry>[]): dataEntry<dataEntry[]>[] {
+  
+  
+
+  return dataMap;
 }
