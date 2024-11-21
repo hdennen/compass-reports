@@ -1,5 +1,6 @@
 import ConfidenceChart from '../charts/confidence';
 import { CsvImport } from '@compass/csv-import'
+import { useAssessmentStore, AssessmentActions } from '../store/assessmentStore';
 
 const data = [
   {
@@ -37,6 +38,9 @@ const data = [
 
 
 export function App() {
+
+  const assessmentStore = useAssessmentStore();
+
   return (
     <div>
       <div className="flex flex-col justify-center items-center min-h-screen bg-gray-50 p-8">
@@ -44,7 +48,7 @@ export function App() {
           <ConfidenceChart data={data} />
         </div>
         <div>
-          <CsvImport />
+          <CsvImport<AssessmentActions> store={assessmentStore}/>
         </div>
       </div>
     </div>
