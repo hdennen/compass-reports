@@ -4,6 +4,15 @@ import { dataEntry, ConfidenceLevel } from '../store/assessmentStore';
 
 const areaDot = {stroke: '#ffe5a9', strokeWidth: 2, fill: 'white', r: 5};
 
+// ++++++++++++ hard coded actual knowledge values ++++++++++++
+const actualKnowledge = {
+  "Government and commercial healthcare coverage policies and procedures, including benefit design, denials and appeals, and utilization management strategies": 80,
+  "Medical coding and billing which relates to the standardized medical coding systems used to represent diagnoses, procedures, services, products, and the processes involved in submitting and managing healthcare claims": 70,
+  "Payment and reimbursement, including reimbursement models, rates and incentive programs": 90,
+  "Product acquisition and distribution, including the buy and bill process, specialty pharmacy, and distribution channels": 95,
+  "Pricing and contracting, including pricing benchmarks, supply chain dynamics, regulatory compliance considerations, and the various stakeholders and their contracts": 80
+}
+
 function calculateConfidence(data: dataEntry<dataEntry>[]): any[] {
   const confidenceData: {[key: string]: ConfidenceLevel[]} = {};
 
@@ -29,17 +38,12 @@ function calculateConfidence(data: dataEntry<dataEntry>[]): any[] {
     const totalConfidence = values.reduce((sum, val) => sum + ConfidenceLevel[val as keyof typeof ConfidenceLevel], 0);
     const averageConfidence = totalConfidence / values.length;
 
-
-    // ++++++++++++ DUMMY DATA FOR TESTING ++++++++++++
-    const randomOffset = Math.floor(Math.random() * 8) + 1;
-    const randomDirection = Math.random() < 0.5 ? -1 : 1;
-    const randomValue = averageConfidence + (randomOffset * randomDirection);
-    // ++++++++++++ END DUMMY DATA FOR TESTING ++++++++++++
+    const actualAverage = actualKnowledge[name as keyof typeof actualKnowledge] || 50;  
 
     return {
       name,
       averageConfidence,
-      actualAverage: randomValue,
+      actualAverage
     };
   });
 }
