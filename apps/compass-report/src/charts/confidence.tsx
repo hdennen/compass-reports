@@ -91,7 +91,7 @@ export function ConfidenceChart({ data }: { data: dataEntry<dataEntry>[] }) {
         <Bar 
           dataKey="averageConfidence"
           name="Confidence" 
-          barSize={20} 
+          barSize={40} 
           fill="#8db1d3"
         />
       </ComposedChart>

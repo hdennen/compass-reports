@@ -3,6 +3,25 @@ import { dataEntry, ExitConfidenceLevel } from '../store/assessmentStore';
 import { useState } from 'react';
 import { useEffect } from 'react';
 
+// ++++++++++++ hard coded actual knowledge values ++++++++++++
+const actualKnowledge = {
+    "Billing processes": 80,
+    "Coding": 70,
+    "Authorization, denials, and appeals": 90,
+    "Benefit design": 80,
+    "Government programs and policies": 85,
+    "Utilization management": 75,
+    "Additive payment programs": 80,
+    "Reimbursement models and rates": 90,
+    "Regulatory": 80,
+    "Benchmarks": 70,
+    "Supply chain": 75,
+    "Contract stakeholders": 80,
+    "Payer contracting": 85,
+    "Buy and bill": 75,
+    "Specialty pharmacy": 80
+}
+
 
 function calculateExitConfidence(data: dataEntry<dataEntry>[], questionText: string): any[] {
   const exitConfidenceData: { [key: string]: number[] } = {};
@@ -27,9 +46,12 @@ function calculateExitConfidence(data: dataEntry<dataEntry>[], questionText: str
     const totalConfidence = values.reduce((sum, val) => sum + ExitConfidenceLevel[val as keyof typeof ExitConfidenceLevel], 0);
     const averageConfidence = totalConfidence / values.length;
 
+    const shortName = name.split(':')[0];
+
     return {
-      name: name.split(':')[0],
-      value: averageConfidence,
+      name: shortName,
+      confidence: averageConfidence,
+      actual: actualKnowledge[shortName as keyof typeof actualKnowledge] || 50, // TODO: this should be calculated based on scores. **********
     };
   });
 }
@@ -51,13 +73,28 @@ export function ExitConfidenceChart({ data, name, questionText }: { data: dataEn
   return (
     <div className="bg-white rounded-lg shadow-lg p-6">
       <h1 className="text-2xl font-bold text-gray-800 mb-6 text-center">{name}</h1>
-    <ComposedChart width={900} height={450} data={confidenceData} barGap={20}>
-      <XAxis dataKey="name" />
+    <ComposedChart width={900} height={450} data={confidenceData} barGap={20}>  
+      <XAxis 
+        dataKey="name" 
+        tick={(props) => {
+            const { x, y, payload } = props;
+            return (
+              <text x={x} y={y} dy={16} textAnchor="middle" fill="#666">
+                <tspan x={x} textAnchor="middle">
+                  {payload.value.length > 20 
+                    ? `${payload.value.substring(0, 10)}...`
+                    : payload.value}
+                </tspan>
+              </text>
+            );
+          }}
+      />
       <YAxis />
       <Tooltip />
       <Legend />
       <CartesianGrid stroke="#dadbdd" />
-      <Bar dataKey="value" name="Exit Confidence" barSize={20} fill="#8db1d3" />
+      <Bar dataKey="confidence" name="Exit Confidence" barSize={40} fill="#8db1d3" />
+      <Bar dataKey="actual" name="Actual" barSize={40} fill="rgba(41, 191, 0, .5)" />
     </ComposedChart>
     </div>
   );
