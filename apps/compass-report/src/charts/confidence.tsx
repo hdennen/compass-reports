@@ -23,7 +23,6 @@ function calculateConfidence(data: dataEntry<dataEntry>[]): any[] {
     });
 
   });
-  console.log(confidenceData);
 
   // Transform the object into an array of data points
   return Object.entries(confidenceData).map(([name, values]) => {
