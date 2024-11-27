@@ -19,10 +19,10 @@ export interface AssessmentActions {
 }
 
 export enum ConfidenceLevel {
-  'Very limited' = 1,
-  'Foundational' = 2,
-  'Advanced' = 3,
-  'Expert' = 4
+  'Very limited' = 65,
+  'Foundational' = 75,
+  'Advanced' = 85,
+  'Expert' = 99
 }
 
 export const useAssessmentStore = create<AssessmentState & AssessmentActions>((set, get) => ({

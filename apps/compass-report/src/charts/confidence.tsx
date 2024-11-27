@@ -78,7 +78,7 @@ export function ConfidenceChart({ data }: { data: dataEntry<dataEntry>[] }) {
           dataKey="amt" 
           name="Average" 
           dot={areaDot} 
-          fill="#ffe5a9" 
+          fill="rgba(255,205,86,.5)" 
           stroke="#ffe5a9" 
         />
         <Bar 
