@@ -1,4 +1,4 @@
-import { Bar, Tooltip, Legend, CartesianGrid, ComposedChart, YAxis, XAxis } from 'recharts';
+import { Bar, Tooltip, Legend, CartesianGrid, ComposedChart, YAxis, XAxis, Area } from 'recharts';
 import { dataEntry, ExitConfidenceLevel } from '../store/assessmentStore';
 import { useState } from 'react';
 import { useEffect } from 'react';
@@ -22,8 +22,17 @@ const actualKnowledge = {
     "Specialty pharmacy": 80
 }
 
+const actualKnowledgeArea = {
+    "Coverage": 91.42857143,
+    "Coding and Billing": 85.71429,
+    "Payment and Reimbursement": 79.59184,
+    "Product Acquisition and Distribution": 93.87755,
+    "Pricing and Contracting": 83.92857
+  }
 
-function calculateExitConfidence(data: dataEntry<dataEntry>[], questionText: string): any[] {
+const areaDot = {stroke: '#ffe5a9', strokeWidth: 2, fill: 'white', r: 5};
+
+function calculateExitConfidence(data: dataEntry<dataEntry>[], questionText: string, areaName: string): any[] {
   const exitConfidenceData: { [key: string]: number[] } = {};
 
   data.forEach(item => {
@@ -55,7 +64,7 @@ function calculateExitConfidence(data: dataEntry<dataEntry>[], questionText: str
     return {
       name: shortName,
       confidence: averageConfidence,
-      actual: actualKnowledge[shortName as keyof typeof actualKnowledge] || 50, // TODO: this should be calculated based on scores. **********
+      actual: actualKnowledgeArea[areaName as keyof typeof actualKnowledgeArea] || 50, // TODO: this should be calculated based on scores. **********
     };
   });
 }
@@ -67,7 +76,7 @@ export function ExitConfidenceChart({ data, name, questionText }: { data: dataEn
   useEffect(() => {
     if (data.length > 0) {
       console.log('Data has been updated:', data);
-      const calculatedData = calculateExitConfidence(data, questionText);
+      const calculatedData = calculateExitConfidence(data, questionText, name);
       console.log(calculatedData);
       setConfidenceData(calculatedData);
     }
@@ -97,8 +106,16 @@ export function ExitConfidenceChart({ data, name, questionText }: { data: dataEn
       <Tooltip />
       <Legend />
       <CartesianGrid stroke="#dadbdd" />
+      <Area 
+          type="monotone" 
+          dataKey="actual" 
+          name="Actual" 
+          dot={areaDot} 
+          fill="rgba(255,205,86,.5)" 
+          stroke="#ffe5a9" 
+        />
       <Bar dataKey="confidence" name="Exit Confidence" barSize={40} fill="#8db1d3" />
-      <Bar dataKey="actual" name="Actual" barSize={40} fill="rgba(41, 191, 0, .5)" />
+      {/* <Bar dataKey="actual" name="Actual" barSize={40} fill="rgba(41, 191, 0, .5)" /> */}
     </ComposedChart>
     </div>
   );
