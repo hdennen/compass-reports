@@ -19,10 +19,17 @@ export interface AssessmentActions {
 }
 
 export enum ConfidenceLevel {
-  'Very limited' = 1,
-  'Foundational' = 2,
-  'Advanced' = 3,
-  'Expert' = 4
+  'Very limited' = 65,
+  'Foundational' = 75,
+  'Advanced' = 85,
+  'Expert' = 99
+}
+
+export enum ExitConfidenceLevel {
+  'Completely unsure' = 65,
+  'Slightly unsure' = 75,
+  'Fairly sure' = 85,
+  'Completely sure' = 99
 }
 
 export const useAssessmentStore = create<AssessmentState & AssessmentActions>((set, get) => ({
@@ -47,13 +54,10 @@ export const useAssessmentStore = create<AssessmentState & AssessmentActions>((s
 
 function transformToNestedStructure(rawData: any[]): dataEntry<dataEntry>[] {
   const subHeaders = rawData.shift();
-  console.log(subHeaders);
 
   const transformedToRecordsAsObjects = consolidateSubHeadersIntoRawData(rawData, subHeaders);
-  console.log(transformedToRecordsAsObjects);
-
   const transformedToConsolidatedHeaders = consolidateHeaders(transformedToRecordsAsObjects);
-  console.log(transformedToConsolidatedHeaders);
+
   return transformedToConsolidatedHeaders
 }
 

@@ -1,4 +1,5 @@
 import { parse } from 'csv-parse/browser/esm';
+import { useState } from 'react';
 
 
 interface CsvImportProps<T> {
@@ -13,10 +14,12 @@ interface AssessmentActions {
 }
 
 export function CsvImport<T extends AssessmentActions>({ store }: CsvImportProps<T>) {
+  const [fileName, setFileName] = useState<string | null>(null);
 
   function readCsvInput(e: React.ChangeEvent<HTMLInputElement>) {
     const file = e.target.files?.[0];
     if (file) {
+      setFileName(file.name);
       const reader = new FileReader();
       reader.onload = (event) => {
         const csvData = event.target?.result as string;
@@ -54,11 +57,20 @@ export function CsvImport<T extends AssessmentActions>({ store }: CsvImportProps
 
   return (
     <div>
-      <input
-        type="file"
-        accept=".csv, .tsv"
-        onChange={readCsvInput}
-      />
+      <label className="cursor-pointer inline-block px-4 py-2 bg-blue-500 text-white rounded">
+        {fileName ? 'Change File' : 'Choose CSV File'}
+        <input
+          type="file"
+          accept=".csv, .tsv"
+          onChange={readCsvInput}
+          className="hidden"
+        />
+      </label>
+      {fileName && (
+        <p className="mt-2 text-sm text-gray-600 break-words max-w-xs">
+          {fileName}
+        </p>
+      )}
     </div>
   );
 }

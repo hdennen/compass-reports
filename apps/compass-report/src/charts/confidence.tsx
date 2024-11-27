@@ -4,6 +4,15 @@ import { dataEntry, ConfidenceLevel } from '../store/assessmentStore';
 
 const areaDot = {stroke: '#ffe5a9', strokeWidth: 2, fill: 'white', r: 5};
 
+// ++++++++++++ hard coded actual knowledge values ++++++++++++
+const actualKnowledge = {
+  "Government and commercial healthcare coverage policies and procedures, including benefit design, denials and appeals, and utilization management strategies": 91.42857143,
+  "Medical coding and billing which relates to the standardized medical coding systems used to represent diagnoses, procedures, services, products, and the processes involved in submitting and managing healthcare claims": 85.71429,
+  "Payment and reimbursement, including reimbursement models, rates and incentive programs": 79.59184,
+  "Product acquisition and distribution, including the buy and bill process, specialty pharmacy, and distribution channels": 93.87755,
+  "Pricing and contracting, including pricing benchmarks, supply chain dynamics, regulatory compliance considerations, and the various stakeholders and their contracts": 83.92857
+}
+
 function calculateConfidence(data: dataEntry<dataEntry>[]): any[] {
   const confidenceData: {[key: string]: ConfidenceLevel[]} = {};
 
@@ -23,16 +32,18 @@ function calculateConfidence(data: dataEntry<dataEntry>[]): any[] {
     });
 
   });
-  console.log(confidenceData);
 
   // Transform the object into an array of data points
   return Object.entries(confidenceData).map(([name, values]) => {
-    const barValue = values.reduce((sum, val) => sum + ConfidenceLevel[val as keyof typeof ConfidenceLevel], 0);
-    const areaValue = barValue / values.length;
+    const totalConfidence = values.reduce((sum, val) => sum + ConfidenceLevel[val as keyof typeof ConfidenceLevel], 0);
+    const averageConfidence = totalConfidence / values.length;
+
+    const actualAverage = actualKnowledge[name as keyof typeof actualKnowledge] || 50; // TODO: should be calculated from results and rubric
+
     return {
       name,
-      before: barValue,
-      amt: areaValue,
+      averageConfidence,
+      actualAverage
     };
   });
 }
@@ -75,16 +86,16 @@ export function ConfidenceChart({ data }: { data: dataEntry<dataEntry>[] }) {
         <CartesianGrid stroke="#dadbdd" />
         <Area 
           type="monotone" 
-          dataKey="amt" 
-          name="Average" 
+          dataKey="actualAverage" 
+          name="Actual" 
           dot={areaDot} 
-          fill="#ffe5a9" 
+          fill="rgba(255,205,86,.5)" 
           stroke="#ffe5a9" 
         />
         <Bar 
-          dataKey="before"
+          dataKey="averageConfidence"
           name="Confidence" 
-          barSize={20} 
+          barSize={40} 
           fill="#8db1d3"
         />
       </ComposedChart>
