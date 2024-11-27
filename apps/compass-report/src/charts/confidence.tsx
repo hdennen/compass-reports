@@ -80,13 +80,36 @@ export function ConfidenceChart({ data }: { data: dataEntry<dataEntry>[] }) {
             );
           }}
         />
-        <YAxis />
+        <YAxis 
+          yAxisId="left"
+          orientation="left"
+          domain={[0, 100]}  // Add domain for percentage scale
+        />
+        <YAxis 
+          yAxisId="right"
+          orientation="right"
+          width={100}
+          domain={[0, 100]}  // Add domain for percentage scale
+          ticks={[25, 50, 75, 100]}
+          tickFormatter={(value) => {
+            const labels = {
+              25: ConfidenceLevel[25],
+              50: ConfidenceLevel[50],
+              75: ConfidenceLevel[75],
+              100: ConfidenceLevel[100]
+            };
+            return labels[value as keyof typeof labels] || value;
+          }}
+        />
         <Tooltip />
         <Legend />
-        <CartesianGrid stroke="#dadbdd" />
+        <CartesianGrid 
+          stroke="#dadbdd" 
+        />
         <Area 
           type="monotone" 
           dataKey="actualAverage" 
+          yAxisId="left"
           name="Actual" 
           dot={areaDot} 
           fill="rgba(255,205,86,.5)" 
@@ -94,6 +117,7 @@ export function ConfidenceChart({ data }: { data: dataEntry<dataEntry>[] }) {
         />
         <Bar 
           dataKey="averageConfidence"
+          yAxisId="right"
           name="Confidence" 
           barSize={40} 
           fill="#8db1d3"
