@@ -4,11 +4,11 @@ import { useState } from 'react';
 import { useEffect } from 'react';
 
 
-function calculateExitConfidence(data: dataEntry<dataEntry>[]): any[] {
+function calculateExitConfidence(data: dataEntry<dataEntry>[], questionText: string): any[] {
   const exitConfidenceData: { [key: string]: number[] } = {};
 
   data.forEach(item => {
-    const codingAndBillingExitConfidence = item['Please take a moment to reflect on how confident you are about your knowledge relative to each subtopic covered in the Coding and Billing section you just completed.'];
+    const codingAndBillingExitConfidence = item[questionText];
 
     Object.keys(codingAndBillingExitConfidence).forEach(key => {
         const confidenceLevel = codingAndBillingExitConfidence[key];
@@ -35,13 +35,13 @@ function calculateExitConfidence(data: dataEntry<dataEntry>[]): any[] {
 }
 
 
-export function ExitConfidenceChart({ data, name }: { data: dataEntry<dataEntry>[], name: string }) {
+export function ExitConfidenceChart({ data, name, questionText }: { data: dataEntry<dataEntry>[], name: string, questionText: string }) {
     const [confidenceData, setConfidenceData] = useState<any[]>([]);
 
   useEffect(() => {
     if (data.length > 0) {
       console.log('Data has been updated:', data);
-      const calculatedData = calculateExitConfidence(data);
+      const calculatedData = calculateExitConfidence(data, questionText);
       console.log(calculatedData);
       setConfidenceData(calculatedData);
     }
