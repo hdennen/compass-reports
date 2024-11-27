@@ -40,7 +40,7 @@ function calculateConfidence(data: dataEntry<dataEntry>[]): any[] {
     return {
       name,
       averageConfidence,
-      actualAverage: Math.max(0, Math.min(100, randomValue)),
+      actualAverage: randomValue,
     };
   });
 }
