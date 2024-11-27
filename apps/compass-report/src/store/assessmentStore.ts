@@ -19,10 +19,10 @@ export interface AssessmentActions {
 }
 
 export enum ConfidenceLevel {
-  'Very limited' = 65,
-  'Foundational' = 75,
-  'Advanced' = 85,
-  'Expert' = 99
+  'Very limited' = 25,
+  'Foundational' = 50,
+  'Advanced' = 75,
+  'Expert' = 100
 }
 
 export enum ExitConfidenceLevel {
