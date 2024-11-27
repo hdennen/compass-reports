@@ -27,10 +27,14 @@ function calculateExitConfidence(data: dataEntry<dataEntry>[], questionText: str
   const exitConfidenceData: { [key: string]: number[] } = {};
 
   data.forEach(item => {
-    const codingAndBillingExitConfidence = item[questionText];
+    const exitConfidence = item[questionText];
+    if (!exitConfidence) {
+        console.warn('No exit confidence data found for ' + questionText);
+        return;
+    }
 
-    Object.keys(codingAndBillingExitConfidence).forEach(key => {
-        const confidenceLevel = codingAndBillingExitConfidence[key];
+    Object.keys(exitConfidence).forEach(key => {
+        const confidenceLevel = exitConfidence[key];
         if (Object.values(ExitConfidenceLevel).includes(confidenceLevel as ExitConfidenceLevel)) {
         if (!exitConfidenceData[key]) {
             exitConfidenceData[key] = [];
