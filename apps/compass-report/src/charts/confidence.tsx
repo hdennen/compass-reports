@@ -84,7 +84,7 @@ export function ConfidenceChart({ data }: { data: dataEntry<dataEntry>[] }) {
         <Area 
           type="monotone" 
           dataKey="actualAverage" 
-          name="Average" 
+          name="Actual" 
           dot={areaDot} 
           fill="rgba(255,205,86,.5)" 
           stroke="#ffe5a9" 
