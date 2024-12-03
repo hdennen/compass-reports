@@ -6,19 +6,41 @@ import { C1SectionQuestions } from '../data';
 
 const areaDot = {stroke: '#ffe5a9', strokeWidth: 2, fill: 'white', r: 5};
 
-// ++++++++++++ hard coded actual knowledge values ++++++++++++
-const actualKnowledge = {
-  "Government and commercial healthcare coverage policies and procedures, including benefit design, denials and appeals, and utilization management strategies": 91.42857143,
-  "Medical coding and billing which relates to the standardized medical coding systems used to represent diagnoses, procedures, services, products, and the processes involved in submitting and managing healthcare claims": 85.71429,
-  "Payment and reimbursement, including reimbursement models, rates and incentive programs": 79.59184,
-  "Product acquisition and distribution, including the buy and bill process, specialty pharmacy, and distribution channels": 93.87755,
-  "Pricing and contracting, including pricing benchmarks, supply chain dynamics, regulatory compliance considerations, and the various stakeholders and their contracts": 83.92857
+function calculateActualKnowledge(responseData: dataEntry<dataEntry>[]): {[key: string]: number} {
+  const actualKnowledgeData: {[key: string]: number} = {};
+
+  Object.keys(C1SectionQuestions).forEach(section => {
+    let totalPointsAwarded = 0;
+    let totalPointsAvailable = 0;
+    let scoreCount = 0;
+  
+    C1SectionQuestions[section as keyof typeof C1SectionQuestions].forEach(questionKey => {
+      responseData.forEach(respondent => {
+        const responseData = respondent[questionKey];
+        if (responseData && responseData.Points) {
+          const [pointsAwardedStr, pointsAvailableStr] = responseData.Points.toString().split('/');
+          const pointsAwarded = parseFloat(pointsAwardedStr);
+          const pointsAvailable = parseFloat(pointsAvailableStr);
+  
+          if (!isNaN(pointsAwarded) && !isNaN(pointsAvailable) && pointsAvailable > 0) {
+            scoreCount++;
+            totalPointsAwarded += pointsAwarded;
+            totalPointsAvailable += pointsAvailable;
+          }
+        }
+      });
+    });
+
+    actualKnowledgeData[section] = scoreCount > 0 ? (totalPointsAwarded / totalPointsAvailable) * 100 : 0;
+  })
+
+  return actualKnowledgeData;
 }
 
-function calculateConfidence(data: dataEntry<dataEntry>[]): any[] {
+function calculateConfidence(assessmentData: dataEntry<dataEntry>[], responseData: dataEntry<dataEntry>[]): any[] {
   const confidenceData: {[key: string]: ConfidenceLevel[]} = {};
 
-  data.forEach(item => {
+  assessmentData.forEach(item => {
     Object.keys(item).forEach(key => {
       const value = item[key];
 
@@ -35,12 +57,14 @@ function calculateConfidence(data: dataEntry<dataEntry>[]): any[] {
 
   });
 
+  const actualKnowledgeData = calculateActualKnowledge(responseData);
+
   // Transform the object into an array of data points
   return Object.entries(confidenceData).map(([name, values]) => {
     const totalConfidence = values.reduce((sum, val) => sum + ConfidenceLevel[val as keyof typeof ConfidenceLevel], 0);
     const averageConfidence = totalConfidence / values.length;
 
-    const actualAverage = actualKnowledge[name as keyof typeof actualKnowledge] || 50; // TODO: should be calculated from results and rubric
+    const actualAverage = actualKnowledgeData[name as keyof typeof actualKnowledge];
 
     return {
       name,
@@ -50,16 +74,16 @@ function calculateConfidence(data: dataEntry<dataEntry>[]): any[] {
   });
 }
 
-export function ConfidenceChart({ data }: { data: dataEntry<dataEntry>[] }) {
+export function ConfidenceChart({ assessmentData, responseData }: { assessmentData: dataEntry<dataEntry>[], responseData: dataEntry<dataEntry>[] }) {
   const [confidenceData, setConfidenceData] = useState<any[]>([]);
 
   useEffect(() => {
-    if (data.length > 0) {
-      console.log('Data has been updated:', data);
-      const calculatedData = calculateConfidence(data);
+    if (assessmentData.length > 0) {
+      console.log('Confidence Chart Data has been updated:', assessmentData);
+      const calculatedData = calculateConfidence(assessmentData, responseData);
       setConfidenceData(calculatedData);
     }
-  }, [data]);
+  }, [assessmentData, responseData]);
 
   return (
     <div className="bg-white rounded-lg shadow-lg p-6">
