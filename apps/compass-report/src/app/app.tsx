@@ -39,22 +39,6 @@ export function App() {
         <div className="mb-8">
           <ConfidenceChart data={assessmentStore.transformedData} />
         </div>
-        <div className="mb-8">
-          <ExitConfidenceChart data={assessmentStore.transformedData} name="Coding and Billing" questionText="Please take a moment to reflect on how confident you are about your knowledge relative to each subtopic covered in the Coding and Billing section you just completed." />
-        </div>
-        <div className="mb-8">
-          <ExitConfidenceChart data={assessmentStore.transformedData} name="Coverage" questionText="Please take a moment to reflect on how confident you are about your knowledge relative to each subtopic covered in the Coverage section you just completed." />
-        </div>
-        <div className="mb-8">
-          <ExitConfidenceChart data={assessmentStore.transformedData} name="Payment and Reimbursement" questionText="Please take a moment to reflect on how confident you are about your knowledge relative to each subtopic covered in the Payment and Reimbursement section you just completed." />
-        </div>
-        <div className="mb-8">
-          <ExitConfidenceChart data={assessmentStore.transformedData} name="Pricing and Contracting" questionText="Please take a moment to reflect on how confident you are about your knowledge relative to each subtopic covered in the Pricing and Contracting section you just completed." />
-        </div>
-        <div className="mb-8">
-          <ExitConfidenceChart data={assessmentStore.transformedData} name="Product Acquisition and Distribution" questionText="Please take a moment to reflect on how confident you are about your knowledge relative to each subtopic covered in the Product Acquisition and Distribution section you just completed." />
-        </div>
-
       </div>
     </div>
   );
