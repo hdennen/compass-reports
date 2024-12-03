@@ -15,7 +15,7 @@ export interface AssessmentActions {
   transformData: (transformer: (data: any[]) => dataEntry<dataEntry>[]) => void;
 }
 
-export const useAssessmentStore = create<AssessmentState & AssessmentActions>((set, get) => ({
+export const useResponseStore = create<AssessmentState & AssessmentActions>((set, get) => ({
   rawData: [],
   transformedData: [],
   isLoading: false,
@@ -27,6 +27,7 @@ export const useAssessmentStore = create<AssessmentState & AssessmentActions>((s
     const { rawData } = get();
     try {
       const transformed = transformer(rawData);
+      console.log('Transformed Data:', transformed);
       set({ transformedData: transformed });
     } catch (error) {
       set({ error: error instanceof Error ? error.message : 'Failed to transform data' });

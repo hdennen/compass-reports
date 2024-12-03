@@ -1,5 +1,6 @@
 import { Bar, Tooltip, Legend, CartesianGrid, ComposedChart, YAxis, XAxis, Area } from 'recharts';
-import { dataEntry, ExitConfidenceLevel } from '../store/assessmentStore';
+import { dataEntry } from '../types';
+import { ExitConfidenceLevel } from '../enums';
 import { useState } from 'react';
 import { useEffect } from 'react';
 

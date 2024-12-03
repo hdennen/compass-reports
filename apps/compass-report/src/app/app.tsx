@@ -3,10 +3,13 @@ import ConfidenceChart from '../charts/confidence';
 import { CsvImport } from '@compass/csv-import'
 import { useAssessmentStore, AssessmentActions } from '../store/assessmentStore';
 import { Bars3Icon, XMarkIcon } from '@heroicons/react/24/outline';
-import ExitConfidenceChart from '../charts/exitConfidence';
+import { transformToNestedStructure } from '../transformers/csvHeadersTranformer';
+import { transformToQuestionId } from '../transformers/questionIdTransformer';
+import { useResponseStore } from '../store/responseStore';
 
 export function App() {
   const assessmentStore = useAssessmentStore();
+  const responseStore = useResponseStore();
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
 
   const toggleDrawer = () => {
@@ -17,7 +20,12 @@ export function App() {
     <div className="relative">
       <div className={`fixed inset-y-0 left-0 w-64 bg-white shadow-lg transform ${isDrawerOpen ? 'translate-x-0' : '-translate-x-full'} transition-transform duration-300 ease-in-out`}>
         <nav className="p-4 mt-12">
-            <CsvImport<AssessmentActions> store={assessmentStore}/>
+          <div className="my-4">
+            <CsvImport<AssessmentActions> store={assessmentStore} buttonText="Choose Cohort CSV" transformer={transformToNestedStructure}/>
+          </div>
+          <div className="my-4">
+            <CsvImport<AssessmentActions> store={responseStore} buttonText="Choose Responses CSV" transformer={(data)=>transformToQuestionId(transformToNestedStructure(data)) /* clunky argument structure here */}/>
+          </div>
         </nav>
       </div>
 
@@ -37,24 +45,8 @@ export function App() {
         </button>
 
         <div className="mb-8">
-          <ConfidenceChart data={assessmentStore.transformedData} />
+          <ConfidenceChart assessmentData={assessmentStore.transformedData} responseData={responseStore.transformedData} />
         </div>
-        <div className="mb-8">
-          <ExitConfidenceChart data={assessmentStore.transformedData} name="Coding and Billing" questionText="Please take a moment to reflect on how confident you are about your knowledge relative to each subtopic covered in the Coding and Billing section you just completed." />
-        </div>
-        <div className="mb-8">
-          <ExitConfidenceChart data={assessmentStore.transformedData} name="Coverage" questionText="Please take a moment to reflect on how confident you are about your knowledge relative to each subtopic covered in the Coverage section you just completed." />
-        </div>
-        <div className="mb-8">
-          <ExitConfidenceChart data={assessmentStore.transformedData} name="Payment and Reimbursement" questionText="Please take a moment to reflect on how confident you are about your knowledge relative to each subtopic covered in the Payment and Reimbursement section you just completed." />
-        </div>
-        <div className="mb-8">
-          <ExitConfidenceChart data={assessmentStore.transformedData} name="Pricing and Contracting" questionText="Please take a moment to reflect on how confident you are about your knowledge relative to each subtopic covered in the Pricing and Contracting section you just completed." />
-        </div>
-        <div className="mb-8">
-          <ExitConfidenceChart data={assessmentStore.transformedData} name="Product Acquisition and Distribution" questionText="Please take a moment to reflect on how confident you are about your knowledge relative to each subtopic covered in the Product Acquisition and Distribution section you just completed." />
-        </div>
-
       </div>
     </div>
   );
