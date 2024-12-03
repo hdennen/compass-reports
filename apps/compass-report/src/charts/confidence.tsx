@@ -1,6 +1,8 @@
 import { ComposedChart, XAxis, YAxis, Tooltip, Legend, CartesianGrid, Area, Bar } from 'recharts';
 import { useEffect, useState } from 'react';
-import { dataEntry, ConfidenceLevel } from '../store/assessmentStore';
+import { dataEntry } from '../types';
+import { ConfidenceLevel } from '../enums';
+import { C1SectionQuestions } from '../data';
 
 const areaDot = {stroke: '#ffe5a9', strokeWidth: 2, fill: 'white', r: 5};
 

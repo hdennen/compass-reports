@@ -1,4 +1,5 @@
 import { create } from 'zustand';
+import { dataEntry } from '../types';
 
 interface AssessmentState {
   rawData: { [key: string]: string }[]; 
