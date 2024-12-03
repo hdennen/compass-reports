@@ -8,29 +8,11 @@ interface AssessmentState {
   error: string | null;
 }
 
-export interface dataEntry<T = string | number | boolean | dataEntry<any>> {
-  [key: string]: T;
-}
-
 export interface AssessmentActions {
   setRawData: (data: any[]) => void;
   setLoading: (loading: boolean) => void;
   setError: (error: string | null) => void;
-  transformData: () => void;
-}
-
-export enum ConfidenceLevel {
-  'Very limited' = 25,
-  'Foundational' = 50,
-  'Advanced' = 75,
-  'Expert' = 100
-}
-
-export enum ExitConfidenceLevel {
-  'Completely unsure' = 65,
-  'Slightly unsure' = 75,
-  'Fairly sure' = 85,
-  'Completely sure' = 99
+  transformData: (transformer: (data: any[]) => dataEntry<dataEntry>[]) => void;
 }
 
 export const useAssessmentStore = create<AssessmentState & AssessmentActions>((set, get) => ({
@@ -41,10 +23,10 @@ export const useAssessmentStore = create<AssessmentState & AssessmentActions>((s
   setRawData: (data) => set({ rawData: data }),
   setLoading: (loading) => set({ isLoading: loading }),
   setError: (error) => set({ error }),
-  transformData: () => {
+  transformData: (transformer: (data: any[]) => dataEntry<dataEntry>[]) => {
     const { rawData } = get();
     try {
-      const transformed = transformToNestedStructure(rawData);
+      const transformed = transformer(rawData);
       set({ transformedData: transformed });
     } catch (error) {
       set({ error: error instanceof Error ? error.message : 'Failed to transform data' });
@@ -52,50 +34,3 @@ export const useAssessmentStore = create<AssessmentState & AssessmentActions>((s
     }
   },
 }));
-
-function transformToNestedStructure(rawData: any[]): dataEntry<dataEntry>[] {
-  const subHeaders = rawData.shift();
-
-  const transformedToRecordsAsObjects = consolidateSubHeadersIntoRawData(rawData, subHeaders);
-  const transformedToConsolidatedHeaders = consolidateHeaders(transformedToRecordsAsObjects);
-
-  return transformedToConsolidatedHeaders
-}
-
-function consolidateSubHeadersIntoRawData(rawData: dataEntry<dataEntry>[], subHeaders: dataEntry): dataEntry<dataEntry>[] {
-  const transformed = rawData.map(item => {
-    for (const key in item) {
-      if (item.hasOwnProperty(key) && subHeaders[key] !== "") {
-        item[key] = { [String(subHeaders[key])]: item[key] };
-      }
-    }
-    return item;
-  });
-
-  return transformed;
-}
-
-function consolidateHeaders(subHeaderedDataRecords: dataEntry<dataEntry>[]): dataEntry<dataEntry>[] {
-  const consolidatedDataRecords: dataEntry<dataEntry>[] = [];
-  
-  subHeaderedDataRecords.forEach(record => {
-    const consolidatedRecord: dataEntry<dataEntry> = {};
-
-    for (const key in record) {
-      if (record.hasOwnProperty(key)) {
-        const value = record[key];
-        const splitKey = key.split(/_(?=\d)/);
-
-        if (splitKey.length > 1) {
-          consolidatedRecord[splitKey[0]] = Object.assign(consolidatedRecord[splitKey[0]], value);
-        } else {
-          consolidatedRecord[key] = value;
-        }
-        
-      }
-    }
-    consolidatedDataRecords.push(consolidatedRecord);
-  });
-
-  return consolidatedDataRecords;
-}
