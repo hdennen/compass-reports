@@ -37,7 +37,7 @@ export function App() {
           </div>
           <div className="my-4">
           <div className="my-4">
-            <label htmlFor="thresholdSlider" className="block text-sm font-medium text-gray-700">Set Threshold:</label>
+            <label htmlFor="thresholdSlider" className="block text-sm font-medium text-gray-700">Set Threshold: {responseStore.threshold}%</label>
             <input
               id="thresholdSlider"
               type="range"
