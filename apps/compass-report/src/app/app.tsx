@@ -6,6 +6,8 @@ import { Bars3Icon, XMarkIcon } from '@heroicons/react/24/outline';
 import { transformToNestedStructure } from '../transformers/csvHeadersTranformer';
 import { transformToQuestionId } from '../transformers/questionIdTransformer';
 import { useResponseStore } from '../store/responseStore';
+import { SectionAnalysis } from '../components/sectionAnalysis';
+import { C1SectionQuestions } from '../data';
 
 export function App() {
   const assessmentStore = useAssessmentStore();
@@ -46,6 +48,9 @@ export function App() {
 
         <div className="mb-8">
           <ConfidenceChart assessmentData={assessmentStore.transformedData} responseData={responseStore.transformedData} />
+        </div>
+        <div className="mb-8">
+          <SectionAnalysis sectionName='Coding and Billing' sectionQuestions={C1SectionQuestions['Medical coding and billing which relates to the standardized medical coding systems used to represent diagnoses, procedures, services, products, and the processes involved in submitting and managing healthcare claims']} />
         </div>
       </div>
     </div>
