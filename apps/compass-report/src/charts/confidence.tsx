@@ -128,7 +128,27 @@ export function ConfidenceChart({ assessmentData, responseData }: { assessmentDa
           }}
         />
         <Tooltip />
-        <Legend />
+        <Legend 
+          formatter={(value) => {
+            const colors = {
+              'Actual': '#000',
+              'Confidence': '#000'
+            };
+            return <span style={{ color: colors[value as keyof typeof colors] }}>{value}</span>;
+          }}
+          payload={[
+            {
+              value: 'Actual',
+              type: 'line',
+              color: '#ffb700',  // This controls the icon color
+            },
+            {
+              value: 'Confidence',
+              type: 'rect',
+              color: '#8db1d3',  // This controls the icon color
+            }
+          ]}
+        />
         <CartesianGrid 
           stroke="#dadbdd" 
         />
