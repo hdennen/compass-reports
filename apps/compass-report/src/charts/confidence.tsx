@@ -37,7 +37,7 @@ function calculateActualKnowledge(responseData: dataEntry<dataEntry>[]): {[key: 
   return actualKnowledgeData;
 }
 
-function calculateConfidence(assessmentData: dataEntry<dataEntry>[], responseData: dataEntry<dataEntry>[]): any[] {
+function calculateConfidence(assessmentData: dataEntry<dataEntry>[]): {[key: string]: ConfidenceLevel[]} {
   const confidenceData: {[key: string]: ConfidenceLevel[]} = {};
 
   assessmentData.forEach(item => {
@@ -54,9 +54,13 @@ function calculateConfidence(assessmentData: dataEntry<dataEntry>[], responseDat
         }
       }
     });
-
   });
 
+  return confidenceData;
+}
+
+function calculateChartData(assessmentData: dataEntry<dataEntry>[], responseData: dataEntry<dataEntry>[]): any[] {
+  const confidenceData = calculateConfidence(assessmentData);
   const actualKnowledgeData = calculateActualKnowledge(responseData);
 
   // Transform the object into an array of data points
@@ -80,7 +84,7 @@ export function ConfidenceChart({ assessmentData, responseData }: { assessmentDa
   useEffect(() => {
     if (assessmentData.length > 0) {
       console.log('Confidence Chart Data has been updated:', assessmentData);
-      const calculatedData = calculateConfidence(assessmentData, responseData);
+      const calculatedData = calculateChartData(assessmentData, responseData);
       setConfidenceData(calculatedData);
     }
   }, [assessmentData, responseData]);
