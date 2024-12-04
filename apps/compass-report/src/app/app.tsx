@@ -27,13 +27,31 @@ export function App() {
 
   return (
     <div className="relative">
-      <div className={`fixed inset-y-0 left-0 w-64 bg-white shadow-lg transform ${isDrawerOpen ? 'translate-x-0' : '-translate-x-full'} transition-transform duration-300 ease-in-out`}>
+      <div className={`fixed inset-y-0 left-0 w-80 bg-white shadow-lg transform ${isDrawerOpen ? 'translate-x-0' : '-translate-x-full'} transition-transform duration-300 ease-in-out`}>
         <nav className="p-4 mt-12">
           <div className="my-4">
             <CsvImport<AssessmentActions> store={assessmentStore} buttonText="Choose Cohort CSV" transformer={transformToNestedStructure}/>
           </div>
           <div className="my-4">
             <CsvImport<ResponseActions> store={responseStore} buttonText="Choose Responses CSV" transformer={(data)=>transformToQuestionId(transformToNestedStructure(data)) /* clunky argument structure here */}/>
+          </div>
+          <div className="my-4">
+          <div className="my-4">
+            <label htmlFor="thresholdSlider" className="block text-sm font-medium text-gray-700">Set Threshold:</label>
+            <input
+              id="thresholdSlider"
+              type="range"
+              min="0"
+              max="100"
+              value={responseStore.threshold}
+              onChange={(e) => responseStore.setThreshold(Number(e.target.value))}
+              className="mt-2 w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer"
+            />
+            <div className="flex justify-between text-sm">
+              <span>0</span>
+              <span>100</span>
+            </div>
+          </div>
           </div>
         </nav>
       </div>

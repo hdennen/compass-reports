@@ -9,7 +9,7 @@ interface SectionAnalysisProps {
   sectionKey: string;
 }
 
-function calculateScores(sectionQuestions: string[], responseData: any[]) {
+function calculateScores(sectionQuestions: string[], responseData: any[], threshold: number) {
   let totalCorrect = 0;
   let totalScore = 0;
   const questionsBelow70: string[] = [];
@@ -36,7 +36,7 @@ function calculateScores(sectionQuestions: string[], responseData: any[]) {
 
 
     const percentageScore = (questionTotalPointsAwarded / questionTotalPointsAvailable) * 100;
-    if (percentageScore < 70) {
+    if (percentageScore < threshold) {
       questionsBelow70.push(questionKey);
     }
   });
@@ -46,14 +46,14 @@ function calculateScores(sectionQuestions: string[], responseData: any[]) {
 
 
 export function SectionAnalysis({ sectionQuestions, sectionName, sectionKey }: SectionAnalysisProps) {
-  const { transformedData: responseData } = useResponseStore();
+  const { transformedData: responseData, threshold } = useResponseStore();
   const [confidenceScore, setConfidenceScore] = useState<number>(0);
   const [overallCorrect, setOverallCorrect] = useState<number>(0);
   const [belowSeventyQuestions, setBelowSeventyQuestions] = useState<string[]>([]);
   const assessmentStore = useAssessmentStore();
   useEffect(() => {
     if (responseData.length > 0) {
-      const { totalCorrect, totalScore, questionsBelow70 } = calculateScores(sectionQuestions, responseData);
+      const { totalCorrect, totalScore, questionsBelow70 } = calculateScores(sectionQuestions, responseData, threshold);
       const confidenceData = assessmentStore.getConfidenceData();
       const totalConfidence = confidenceData[sectionKey].reduce((sum, val) => sum + ConfidenceLevel[val as keyof typeof ConfidenceLevel], 0);
       const averageConfidence = totalConfidence / confidenceData[sectionKey].length;
@@ -65,7 +65,7 @@ export function SectionAnalysis({ sectionQuestions, sectionName, sectionKey }: S
       setBelowSeventyQuestions(belowSeventyQuestions as string[]);
 
     }
-  }, [responseData, sectionQuestions]);
+  }, [responseData, sectionQuestions, threshold]);
 
   return (
     <div className="bg-white rounded-lg shadow-lg p-6">
@@ -77,7 +77,7 @@ export function SectionAnalysis({ sectionQuestions, sectionName, sectionKey }: S
         <p className="text-lg mb-4">
           <strong>Overall Correct:</strong> {overallCorrect.toFixed(2)}%
         </p>
-        <h3 className="text-xl font-semibold mb-2">Most missed questions (below 70% Correct):</h3>
+        <h3 className="text-xl font-semibold mb-2">Most missed questions (below {threshold}% Correct):</h3>
         <ul className="list-disc pl-5">
           {belowSeventyQuestions.map((question, index) => (
             <li key={index} className="mb-2">{question}</li>
