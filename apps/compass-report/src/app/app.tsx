@@ -61,7 +61,7 @@ export function App() {
               className="mt-2 w-full h-10 bg-gray-200 rounded-lg appearance-none cursor-pointer"
             >
               <option value="C1">Cohort 1 (Bryan)</option>
-              <option value="C2">Cohort 2 (Mark)</option>
+              <option value="C2">Cohort 2 (Marc)</option>
             </select>
           </div>
           </div>
