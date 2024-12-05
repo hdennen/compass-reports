@@ -68,7 +68,7 @@ export function CsvImport<T extends AssessmentActions>({ store, buttonText, tran
         />
       </label>
       {fileName && (
-        <p className="mt-2 text-sm text-gray-600 break-words max-w-xs">
+        <p className="mt-2 text-sm text-gray-600 break-words max-w-[14rem]">
           {fileName}
         </p>
       )}

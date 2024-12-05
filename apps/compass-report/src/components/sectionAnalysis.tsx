@@ -55,13 +55,15 @@ export function SectionAnalysis({ sectionQuestions, sectionName, sectionKey }: S
     if (responseData.length > 0) {
       const { totalCorrect, totalScore, questionsBelow70 } = calculateScores(sectionQuestions, responseData, threshold);
       const confidenceData = assessmentStore.getConfidenceData();
-      const totalConfidence = confidenceData[sectionKey].reduce((sum, val) => sum + ConfidenceLevel[val as keyof typeof ConfidenceLevel], 0);
-      const averageConfidence = totalConfidence / confidenceData[sectionKey].length;
-      
+      if (confidenceData[sectionKey]) {
+        const totalConfidence = confidenceData[sectionKey].reduce((sum, val) => sum + ConfidenceLevel[val as keyof typeof ConfidenceLevel], 0);
+        const averageConfidence = totalConfidence / confidenceData[sectionKey].length;
+        setConfidenceScore(averageConfidence);
+      }
+
       const belowSeventyQuestions = questionsBelow70.map(question => responseData[0][question].questionText);
 
       setOverallCorrect(totalScore > 0 ? (totalCorrect / totalScore) * 100 : 0);
-      setConfidenceScore(averageConfidence);
       setBelowSeventyQuestions(belowSeventyQuestions as string[]);
 
     }
