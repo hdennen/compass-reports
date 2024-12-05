@@ -7,17 +7,22 @@ import { transformToNestedStructure } from '../transformers/csvHeadersTranformer
 import { transformToQuestionId } from '../transformers/questionIdTransformer';
 import { useResponseStore, ResponseActions } from '../store/responseStore';
 import { SectionAnalysis } from '../components/sectionAnalysis';
-import { C1SectionQuestions } from '../data';
+import { CohortAreaConfig } from '../data';
 import { QuestionAreaKeys, QuestionAreaNames } from '../enums';
 
 export function App() {
   const assessmentStore = useAssessmentStore();
   const responseStore = useResponseStore();
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
-
   const toggleDrawer = () => {
     setIsDrawerOpen(!isDrawerOpen);
   };
+
+  const codingAndBillingQuestions = CohortAreaConfig[responseStore.selectedCohort][QuestionAreaKeys.CodingAndBilling];
+  const coverageQuestions = CohortAreaConfig[responseStore.selectedCohort][QuestionAreaKeys.Coverage];
+  const paymentAndReimbursementQuestions = CohortAreaConfig[responseStore.selectedCohort][QuestionAreaKeys.PaymentAndReimbursement];
+  const pricingAndContractingQuestions = CohortAreaConfig[responseStore.selectedCohort][QuestionAreaKeys.PricingAndContracting];
+  const productAcquisitionAndDistributionQuestions = CohortAreaConfig[responseStore.selectedCohort][QuestionAreaKeys.ProductAcquisitionAndDistribution];
 
   return (
     <div className="relative">
@@ -45,6 +50,20 @@ export function App() {
               <span>0</span>
               <span>100</span>
             </div>
+          
+
+          <div className="my-4">
+            <label htmlFor="cohortToggle" className="block text-sm font-medium text-gray-700">Select Cohort Config:</label>
+            <select
+              id="cohortToggle"
+              value={responseStore.selectedCohort}
+              onChange={(e) => responseStore.setSelectedCohort(e.target.value)}
+              className="mt-2 w-full h-10 bg-gray-200 rounded-lg appearance-none cursor-pointer"
+            >
+              <option value="C1">Cohort 1 (Bryan)</option>
+              <option value="C2">Cohort 2 (Mark)</option>
+            </select>
+          </div>
           </div>
           </div>
         </nav>
@@ -69,19 +88,19 @@ export function App() {
             <ConfidenceChart />
           </div>
           <div className="mb-8">
-            <SectionAnalysis sectionName={QuestionAreaNames.CodingAndBilling} sectionKey={QuestionAreaKeys.CodingAndBilling} sectionQuestions={C1SectionQuestions[QuestionAreaKeys.CodingAndBilling]} />
+            <SectionAnalysis sectionName={QuestionAreaNames.CodingAndBilling} sectionKey={QuestionAreaKeys.CodingAndBilling} sectionQuestions={codingAndBillingQuestions} />
           </div>
           <div className="mb-8">
-            <SectionAnalysis sectionName={QuestionAreaNames.Coverage} sectionKey={QuestionAreaKeys.Coverage} sectionQuestions={C1SectionQuestions[QuestionAreaKeys.Coverage]} />
+            <SectionAnalysis sectionName={QuestionAreaNames.Coverage} sectionKey={QuestionAreaKeys.Coverage} sectionQuestions={coverageQuestions} />
           </div>
           <div className="mb-8">
-            <SectionAnalysis sectionName={QuestionAreaNames.PaymentAndReimbursement} sectionKey={QuestionAreaKeys.PaymentAndReimbursement} sectionQuestions={C1SectionQuestions[QuestionAreaKeys.PaymentAndReimbursement]} />
+            <SectionAnalysis sectionName={QuestionAreaNames.PaymentAndReimbursement} sectionKey={QuestionAreaKeys.PaymentAndReimbursement} sectionQuestions={paymentAndReimbursementQuestions} />
           </div>
           <div className="mb-8">
-            <SectionAnalysis sectionName={QuestionAreaNames.PricingAndContracting} sectionKey={QuestionAreaKeys.PricingAndContracting} sectionQuestions={C1SectionQuestions[QuestionAreaKeys.PricingAndContracting]} />
+            <SectionAnalysis sectionName={QuestionAreaNames.PricingAndContracting} sectionKey={QuestionAreaKeys.PricingAndContracting} sectionQuestions={pricingAndContractingQuestions} />
           </div>
           <div className="mb-8">
-            <SectionAnalysis sectionName={QuestionAreaNames.ProductAcquisitionAndDistribution} sectionKey={QuestionAreaKeys.ProductAcquisitionAndDistribution} sectionQuestions={C1SectionQuestions[QuestionAreaKeys.ProductAcquisitionAndDistribution]} />
+            <SectionAnalysis sectionName={QuestionAreaNames.ProductAcquisitionAndDistribution} sectionKey={QuestionAreaKeys.ProductAcquisitionAndDistribution} sectionQuestions={productAcquisitionAndDistributionQuestions} />
           </div>
         </div>
       </div>

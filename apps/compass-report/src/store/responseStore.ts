@@ -7,6 +7,7 @@ interface ResponseState {
   isLoading: boolean;
   error: string | null;
   threshold: number;
+  selectedCohort: string;
 }
 
 export interface ResponseActions {
@@ -15,6 +16,7 @@ export interface ResponseActions {
   setError: (error: string | null) => void;
   transformData: (transformer: (data: any[]) => dataEntry<dataEntry>[]) => void;
   setThreshold: (threshold: number) => void;
+  setSelectedCohort: (cohort: string) => void;
 }
 
 export const useResponseStore = create<ResponseState & ResponseActions>((set, get) => ({
@@ -23,7 +25,9 @@ export const useResponseStore = create<ResponseState & ResponseActions>((set, ge
   isLoading: false,
   error: null,
   threshold: 70,
+  selectedCohort: 'C1',
   setThreshold: (threshold: number) => set({ threshold }),
+  setSelectedCohort: (cohort: string) => set({ selectedCohort: cohort }),
   setRawData: (data) => set({ rawData: data }),
   setLoading: (loading) => set({ isLoading: loading }),
   setError: (error) => set({ error }),
