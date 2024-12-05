@@ -8,6 +8,7 @@ import { transformToQuestionId } from '../transformers/questionIdTransformer';
 import { useResponseStore, ResponseActions } from '../store/responseStore';
 import { SectionAnalysis } from '../components/sectionAnalysis';
 import { C1SectionQuestions } from '../data';
+import { QuestionAreaKeys, QuestionAreaNames } from '../enums';
 
 export function App() {
   const assessmentStore = useAssessmentStore();
@@ -17,13 +18,6 @@ export function App() {
   const toggleDrawer = () => {
     setIsDrawerOpen(!isDrawerOpen);
   };
-
-  const codingAndBillingSectionKey = 'Medical coding and billing which relates to the standardized medical coding systems used to represent diagnoses, procedures, services, products, and the processes involved in submitting and managing healthcare claims';
-  const coverageSectionKey = 'Government and commercial healthcare coverage policies and procedures, including benefit design, denials and appeals, and utilization management strategies';
-  const paymentAndReimbursementSectionKey = 'Payment and reimbursement, including reimbursement models, rates and incentive programs';
-  const pricingAndContractingSectionKey = 'Pricing and contracting, including pricing benchmarks, supply chain dynamics, regulatory compliance considerations, and the various stakeholders and their contracts';
-  const productAcquisitionAndDistributionSectionKey = 'Product acquisition and distribution, including the buy and bill process, specialty pharmacy, and distribution channels';
-
 
   return (
     <div className="relative">
@@ -75,19 +69,19 @@ export function App() {
             <ConfidenceChart />
           </div>
           <div className="mb-8">
-            <SectionAnalysis sectionName='Coding and Billing' sectionKey={codingAndBillingSectionKey} sectionQuestions={C1SectionQuestions[codingAndBillingSectionKey]} />
+            <SectionAnalysis sectionName={QuestionAreaNames.CodingAndBilling} sectionKey={QuestionAreaKeys.CodingAndBilling} sectionQuestions={C1SectionQuestions[QuestionAreaKeys.CodingAndBilling]} />
           </div>
           <div className="mb-8">
-            <SectionAnalysis sectionName='Coverage' sectionKey={coverageSectionKey} sectionQuestions={C1SectionQuestions[coverageSectionKey]} />
+            <SectionAnalysis sectionName={QuestionAreaNames.Coverage} sectionKey={QuestionAreaKeys.Coverage} sectionQuestions={C1SectionQuestions[QuestionAreaKeys.Coverage]} />
           </div>
           <div className="mb-8">
-            <SectionAnalysis sectionName='Payment and Reimbursement' sectionKey={paymentAndReimbursementSectionKey} sectionQuestions={C1SectionQuestions[paymentAndReimbursementSectionKey]} />
+            <SectionAnalysis sectionName={QuestionAreaNames.PaymentAndReimbursement} sectionKey={QuestionAreaKeys.PaymentAndReimbursement} sectionQuestions={C1SectionQuestions[QuestionAreaKeys.PaymentAndReimbursement]} />
           </div>
           <div className="mb-8">
-            <SectionAnalysis sectionName='Pricing and Contracting' sectionKey={pricingAndContractingSectionKey} sectionQuestions={C1SectionQuestions[pricingAndContractingSectionKey]} />
+            <SectionAnalysis sectionName={QuestionAreaNames.PricingAndContracting} sectionKey={QuestionAreaKeys.PricingAndContracting} sectionQuestions={C1SectionQuestions[QuestionAreaKeys.PricingAndContracting]} />
           </div>
           <div className="mb-8">
-            <SectionAnalysis sectionName='Product Acquisition and Distribution' sectionKey={productAcquisitionAndDistributionSectionKey} sectionQuestions={C1SectionQuestions[productAcquisitionAndDistributionSectionKey]} />
+            <SectionAnalysis sectionName={QuestionAreaNames.ProductAcquisitionAndDistribution} sectionKey={QuestionAreaKeys.ProductAcquisitionAndDistribution} sectionQuestions={C1SectionQuestions[QuestionAreaKeys.ProductAcquisitionAndDistribution]} />
           </div>
         </div>
       </div>

@@ -104,7 +104,6 @@ export function SectionAnalysis({ sectionQuestions, sectionName, sectionKey }: S
         </ul>
       </div>
     </div>
-
   );
 };
 
