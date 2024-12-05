@@ -1,10 +1,11 @@
 import { ComposedChart, XAxis, YAxis, Tooltip, Legend, CartesianGrid, Area, Bar } from 'recharts';
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useRef } from 'react';
 import { dataEntry } from '../types';
 import { ConfidenceLevel, QuestionAreaKeys, QuestionAreaNames } from '../enums';
 import { C1SectionQuestions } from '../data';
 import { useAssessmentStore } from '../store/assessmentStore';
 import { useResponseStore } from '../store/responseStore';
+import { ArrowDownTrayIcon } from '@heroicons/react/24/outline';
 
 const areaDot = {stroke: '#ffe5a9', strokeWidth: 2, fill: 'white', r: 5};
 
@@ -69,6 +70,7 @@ export function ConfidenceChart() {
   const assessmentStore = useAssessmentStore();
   const responseStore = useResponseStore();
   const [chartData, setChartData] = useState<any[]>([]);
+  const chartRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     if (assessmentStore.transformedData.length > 0) {
@@ -79,10 +81,37 @@ export function ConfidenceChart() {
     }
   }, [assessmentStore.transformedData, responseStore.transformedData]);
 
+  const handleDownload = () => {
+    if (chartRef.current) {
+      // Use html-to-image to capture the chart
+      import('html-to-image').then(({ toPng }) => {
+        toPng(chartRef.current!)
+          .then((dataUrl) => {
+            const link = document.createElement('a');
+            link.download = 'confidence-comparison.png';
+            link.href = dataUrl;
+            link.click();
+          })
+          .catch((err) => {
+            console.error('Error downloading chart:', err);
+          });
+      });
+    }
+  };
+
   return (
-    <div className="bg-white rounded-lg shadow-lg p-6 flex justify-center items-center">
-      <div>
-        <h1 className="text-2xl font-bold text-gray-800 mb-6 text-center">Confidence Comparison</h1>
+    <div className="bg-white rounded-lg shadow-lg p-6 flex flex-col items-center">
+      <div className="w-full flex justify-between items-center mb-6">
+        <h1 className="text-2xl font-bold text-gray-800">Confidence Comparison</h1>
+        <button
+          onClick={handleDownload}
+          className="p-2 bg-blue-600 text-white rounded-full hover:bg-blue-700 transition-colors"
+          title="Download Chart"
+        >
+          <ArrowDownTrayIcon className="h-5 w-5" />
+        </button>
+      </div>
+      <div ref={chartRef}>
         <ComposedChart width={900} height={450} data={chartData} barGap={20}>
           <XAxis
             dataKey="name"
