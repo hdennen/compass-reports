@@ -12,7 +12,7 @@ interface SectionAnalysisProps {
 function calculateScores(sectionQuestions: string[], responseData: any[], threshold: number) {
   let totalCorrect = 0;
   let totalScore = 0;
-  const questionsBelow70: string[] = [];
+  const questionsBelowThreshold: string[] = [];
 
   sectionQuestions.forEach(questionKey => {
     let questionTotalPointsAwarded = 0;
@@ -37,11 +37,11 @@ function calculateScores(sectionQuestions: string[], responseData: any[], thresh
 
     const percentageScore = (questionTotalPointsAwarded / questionTotalPointsAvailable) * 100;
     if (percentageScore < threshold) {
-      questionsBelow70.push(questionKey);
+      questionsBelowThreshold.push(questionKey);
     }
   });
 
-  return { totalCorrect, totalScore, questionsBelow70 };
+  return { totalCorrect, totalScore, questionsBelowThreshold };
 }
 
 
@@ -49,22 +49,36 @@ export function SectionAnalysis({ sectionQuestions, sectionName, sectionKey }: S
   const { transformedData: responseData, threshold } = useResponseStore();
   const [confidenceScore, setConfidenceScore] = useState<number>(0);
   const [overallCorrect, setOverallCorrect] = useState<number>(0);
-  const [belowSeventyQuestions, setBelowSeventyQuestions] = useState<string[]>([]);
+  const [belowThresholdQuestions, setBelowSeventyQuestions] = useState<{question: string, pointsAwarded: number, pointsAvailable: number}[]>([]);
   const assessmentStore = useAssessmentStore();
   useEffect(() => {
     if (responseData.length > 0) {
-      const { totalCorrect, totalScore, questionsBelow70 } = calculateScores(sectionQuestions, responseData, threshold);
+      const { totalCorrect, totalScore, questionsBelowThreshold } = calculateScores(sectionQuestions, responseData, threshold);
       const confidenceData = assessmentStore.getConfidenceData();
       if (confidenceData[sectionKey]) {
         const totalConfidence = confidenceData[sectionKey].reduce((sum, val) => sum + ConfidenceLevel[val as keyof typeof ConfidenceLevel], 0);
         const averageConfidence = totalConfidence / confidenceData[sectionKey].length;
         setConfidenceScore(averageConfidence);
       }
+    
+      
+      const belowThresholdQuestionsData = questionsBelowThreshold.map(question => {
+        const points = responseData.reduce((acc, response) => {
+          const [pointsAwardedStr, pointsAvailableStr] = response[question].Points.toString().split('/');
+          acc.pointsAwarded += parseFloat(pointsAwardedStr);
+          acc.pointsAvailable += parseFloat(pointsAvailableStr);
+          return acc;
+        }, { pointsAwarded: 0, pointsAvailable: 0 });
 
-      const belowSeventyQuestions = questionsBelow70.map(question => responseData[0][question].questionText);
+        return {
+          question: responseData[0][question].questionText,
+          pointsAwarded: points.pointsAwarded,
+          pointsAvailable: points.pointsAvailable
+        }
+      });
 
       setOverallCorrect(totalScore > 0 ? (totalCorrect / totalScore) * 100 : 0);
-      setBelowSeventyQuestions(belowSeventyQuestions as string[]);
+      setBelowSeventyQuestions(belowThresholdQuestionsData);
 
     }
   }, [responseData, sectionQuestions, threshold]);
@@ -81,8 +95,8 @@ export function SectionAnalysis({ sectionQuestions, sectionName, sectionKey }: S
         </p>
         <h3 className="text-xl font-semibold mb-2">Most missed questions (below {threshold}% Correct):</h3>
         <ul className="list-disc pl-5">
-          {belowSeventyQuestions.map((question, index) => (
-            <li key={index} className="mb-2">{question}</li>
+          {belowThresholdQuestions.map((question, index) => (
+            <li key={index} className="mb-2">{question.question} ({question.pointsAwarded}/{question.pointsAvailable})</li>
           ))}
         </ul>
       </div>
