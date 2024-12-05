@@ -1,7 +1,7 @@
 import { ComposedChart, XAxis, YAxis, Tooltip, Legend, CartesianGrid, Area, Bar } from 'recharts';
 import { useEffect, useState } from 'react';
 import { dataEntry } from '../types';
-import { ConfidenceLevel } from '../enums';
+import { ConfidenceLevel, QuestionAreaKeys, QuestionAreaNames } from '../enums';
 import { C1SectionQuestions } from '../data';
 import { useAssessmentStore } from '../store/assessmentStore';
 import { useResponseStore } from '../store/responseStore';
@@ -49,8 +49,16 @@ function calculateChartData(responseData: dataEntry<dataEntry>[], confidenceData
 
     const actualAverage = actualKnowledgeData[name as keyof typeof actualKnowledgeData];
 
+    // First find the key in QuestionAreaKeys by its value
+    const areaKey = Object.keys(QuestionAreaKeys).find(
+      key => QuestionAreaKeys[key as keyof typeof QuestionAreaKeys] === name
+    );
+    // Then use that key to get the display name from QuestionAreaNames
+    const displayName = areaKey ? QuestionAreaNames[areaKey as keyof typeof QuestionAreaNames] : name;
+
+
     return {
-      name,
+      name: displayName,
       averageConfidence,
       actualAverage
     };
@@ -86,7 +94,7 @@ export function ConfidenceChart() {
                 <text x={x} y={y} dy={16} textAnchor="middle" fill="#666">
                   <tspan x={x} textAnchor="middle">
                     {payload.value.length > 20 
-                      ? `${payload.value.substring(0, 10)}...`
+                      ? `${payload.value.substring(0, 12)}...`
                       : payload.value}
                   </tspan>
                 </text>
