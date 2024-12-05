@@ -27,7 +27,7 @@ export function App() {
 
   return (
     <div className="relative">
-      <div className={`fixed inset-y-0 left-0 w-80 bg-white shadow-lg transform ${isDrawerOpen ? 'translate-x-0' : '-translate-x-full'} transition-transform duration-300 ease-in-out`}>
+      <div className={`fixed inset-y-0 left-0 w-75 min-w-[16rem] bg-white shadow-lg transform ${isDrawerOpen ? 'translate-x-0' : '-translate-x-full'} transition-transform duration-300 ease-in-out`}>
         <nav className="p-4 mt-12">
           <div className="my-4">
             <CsvImport<AssessmentActions> store={assessmentStore} buttonText="Choose Cohort CSV" transformer={transformToNestedStructure}/>
@@ -58,7 +58,7 @@ export function App() {
 
 
       <div className="flex flex-col justify-center items-center min-h-screen bg-gray-50 p-8">
-        <div className="w-full max-w-[1080px] mx-auto">
+        <div className="w-full max-w-[960px] mx-auto">
           <button
             className="fixed top-4 left-4 z-10 bg-blue-500 text-white p-2 rounded-md hover:bg-blue-600 transition-colors duration-200"
             onClick={toggleDrawer}
