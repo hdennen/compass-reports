@@ -44,6 +44,23 @@ function calculateScores(sectionQuestions: string[], responseData: any[], thresh
   return { totalCorrect, totalScore, questionsBelowThreshold };
 }
 
+function calculateQuestionData(questionsBelowThreshold: string[], responseData: any[]) {
+  return questionsBelowThreshold.map(question => {
+    const points = responseData.reduce((acc, response) => {
+      const [pointsAwardedStr, pointsAvailableStr] = response[question].Points.toString().split('/');
+      acc.pointsAwarded += parseFloat(pointsAwardedStr);
+      acc.pointsAvailable += parseFloat(pointsAvailableStr);
+      return acc;
+    }, { pointsAwarded: 0, pointsAvailable: 0 });
+
+    return {
+      question: responseData[0][question].questionText,
+      pointsAwarded: points.pointsAwarded,
+      pointsAvailable: points.pointsAvailable
+    }
+  });
+}
+
 
 export function SectionAnalysis({ sectionQuestions, sectionName, sectionKey }: SectionAnalysisProps) {
   const { transformedData: responseData, threshold } = useResponseStore();
@@ -60,22 +77,8 @@ export function SectionAnalysis({ sectionQuestions, sectionName, sectionKey }: S
         const averageConfidence = totalConfidence / confidenceData[sectionKey].length;
         setConfidenceScore(averageConfidence);
       }
-    
       
-      const belowThresholdQuestionsData = questionsBelowThreshold.map(question => {
-        const points = responseData.reduce((acc, response) => {
-          const [pointsAwardedStr, pointsAvailableStr] = response[question].Points.toString().split('/');
-          acc.pointsAwarded += parseFloat(pointsAwardedStr);
-          acc.pointsAvailable += parseFloat(pointsAvailableStr);
-          return acc;
-        }, { pointsAwarded: 0, pointsAvailable: 0 });
-
-        return {
-          question: responseData[0][question].questionText,
-          pointsAwarded: points.pointsAwarded,
-          pointsAvailable: points.pointsAvailable
-        }
-      });
+      const belowThresholdQuestionsData = calculateQuestionData(questionsBelowThreshold, responseData);
 
       setOverallCorrect(totalScore > 0 ? (totalCorrect / totalScore) * 100 : 0);
       setBelowSeventyQuestions(belowThresholdQuestionsData);
