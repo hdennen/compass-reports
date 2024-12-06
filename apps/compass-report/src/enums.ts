@@ -28,3 +28,11 @@ export enum ConfidenceLevel {
     PricingAndContracting = 'Pricing and contracting, including pricing benchmarks, supply chain dynamics, regulatory compliance considerations, and the various stakeholders and their contracts',
     ProductAcquisitionAndDistribution = 'Product acquisition and distribution, including the buy and bill process, specialty pharmacy, and distribution channels'
   }
+
+  export enum ExitConfidenceKeys {
+    CodingAndBilling = 'Please take a moment to reflect on how confident you are about your knowledge relative to each subtopic covered in the Coding and Billing section you just completed.',
+    Coverage = 'Please take a moment to reflect on how confident you are about your knowledge relative to each subtopic covered in the Coverage section you just completed.',
+    PaymentAndReimbursement = 'Please take a moment to reflect on how confident you are about your knowledge relative to each subtopic covered in the Payment and Reimbursement section you just completed.',
+    PricingAndContracting = 'Please take a moment to reflect on how confident you are about your knowledge relative to each subtopic covered in the Pricing and Contracting section you just completed.',
+    ProductAcquisitionAndDistribution = 'Please take a moment to reflect on how confident you are about your knowledge relative to each subtopic covered in the Product Acquisition and Distribution section you just completed.'
+  }
