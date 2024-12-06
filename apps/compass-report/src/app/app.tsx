@@ -9,6 +9,7 @@ import { useResponseStore, ResponseActions } from '../store/responseStore';
 import { SectionAnalysis } from '../components/sectionAnalysis';
 import { CohortAreaConfig } from '../data';
 import { QuestionAreaKeys, QuestionAreaNames } from '../enums';
+import { ConfidenceComparison } from '../charts/confidenceComparison';
 
 export function App() {
   const assessmentStore = useAssessmentStore();
@@ -88,6 +89,9 @@ export function App() {
             <ConfidenceChart />
           </div>
           <div className="mb-8">
+            <ConfidenceComparison />
+          </div>
+          <div className="mb-8">
             <SectionAnalysis sectionName={QuestionAreaNames.CodingAndBilling} sectionKey={QuestionAreaKeys.CodingAndBilling} sectionQuestions={codingAndBillingQuestions} />
           </div>
           <div className="mb-8">
@@ -102,6 +106,7 @@ export function App() {
           <div className="mb-8">
             <SectionAnalysis sectionName={QuestionAreaNames.ProductAcquisitionAndDistribution} sectionKey={QuestionAreaKeys.ProductAcquisitionAndDistribution} sectionQuestions={productAcquisitionAndDistributionQuestions} />
           </div>
+
         </div>
       </div>
     </div>
