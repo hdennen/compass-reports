@@ -6,6 +6,7 @@ import { CohortAreaConfig } from '../data';
 import { useAssessmentStore } from '../store/assessmentStore';
 import { useResponseStore } from '../store/responseStore';
 import { ArrowDownTrayIcon } from '@heroicons/react/24/outline';
+import { getDisplayName } from '../utilities';
 
 const areaDot = {stroke: '#ffe5a9', strokeWidth: 2, fill: 'white', r: 5};
 
@@ -45,18 +46,13 @@ function calculateChartData(responseData: dataEntry<dataEntry>[], confidenceData
   const actualKnowledgeData = calculateActualKnowledge(responseData, selectedCohort);
 
   // Transform the object into an array of data points
-  return Object.entries(confidenceData).map(([name, values]) => {
+  return Object.entries(confidenceData).map(([questionText, values]) => {
     const totalConfidence = values.reduce((sum, val) => sum + ConfidenceLevel[val as keyof typeof ConfidenceLevel], 0);
     const averageConfidence = totalConfidence / values.length;
 
-    const actualAverage = actualKnowledgeData[name as keyof typeof actualKnowledgeData];
+    const actualAverage = actualKnowledgeData[questionText as keyof typeof actualKnowledgeData];
 
-    // First find the key in QuestionAreaKeys by its value
-    const areaKey = Object.keys(QuestionAreaKeys).find(
-      key => QuestionAreaKeys[key as keyof typeof QuestionAreaKeys] === name
-    );
-    // Then use that key to get the display name from QuestionAreaNames
-    const displayName = areaKey ? QuestionAreaNames[areaKey as keyof typeof QuestionAreaNames] : name;
+    const displayName = getDisplayName(questionText);
 
 
     return {
