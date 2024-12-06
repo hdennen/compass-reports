@@ -7,10 +7,10 @@ export enum ConfidenceLevel {
   }
   
   export enum ExitConfidenceLevel {
-    'Completely unsure' = 65,
-    'Slightly unsure' = 75,
-    'Fairly sure' = 85,
-    'Completely sure' = 99
+    'Completely unsure' = 25,
+    'Slightly unsure' = 50,
+    'Fairly sure' = 75,
+    'Completely sure' = 100
   }
 
   export enum QuestionAreaNames {
