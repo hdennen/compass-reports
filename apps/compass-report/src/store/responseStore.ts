@@ -9,6 +9,7 @@ interface ResponseState {
   error: string | null;
   threshold: number;
   selectedCohort: string;
+  actualKnowledge: {[key: string]: number};
 }
 
 export interface ResponseActions {
@@ -60,6 +61,7 @@ export const useResponseStore = create<ResponseState & ResponseActions>((set, ge
   error: null,
   threshold: 70,
   selectedCohort: 'C1',
+  actualKnowledge: {},
   setThreshold: (threshold: number) => set({ threshold }),
   setSelectedCohort: (cohort: string) => set({ selectedCohort: cohort }),
   setRawData: (data) => set({ rawData: data }),
@@ -78,6 +80,8 @@ export const useResponseStore = create<ResponseState & ResponseActions>((set, ge
   },
   getActualKnowledge: () => {
     const { transformedData, selectedCohort } = get();
-    return calculateActualKnowledge(transformedData, selectedCohort);
+    const actualKnowledge = calculateActualKnowledge(transformedData, selectedCohort);
+    set({ actualKnowledge });
+    return actualKnowledge;
   },
 }));

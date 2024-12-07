@@ -14,6 +14,7 @@ import { useEffect, useState, useRef } from 'react';
 import { ArrowDownTrayIcon } from '@heroicons/react/24/outline';
 import { getDisplayName } from '../utilities';
 import { useResponseStore } from '../store/responseStore';
+import { colors } from './colors';
 
 interface ChartData {
   area: string;
@@ -89,9 +90,20 @@ export function ConfidenceComparison() {
           <CartesianGrid strokeDasharray="3 3" />
           <XAxis 
             dataKey="area" 
-            angle={-45}
-            textAnchor="end"
-            height={80}
+            height={60}
+            interval={0}
+            tick={(props) => {
+              const { x, y, payload } = props;
+              return (
+                <text x={x} y={y} dy={16} textAnchor="middle" fill="#666">
+                  <tspan x={x} textAnchor="middle">
+                    {payload.value.length > 20 
+                      ? `${payload.value.substring(0, 12)}...`
+                      : payload.value}
+                  </tspan>
+                </text>
+              );
+            }}
           />
           <YAxis 
             domain={[0, 100]}
@@ -102,21 +114,30 @@ export function ConfidenceComparison() {
             }}
           />
           <Tooltip />
-          <Legend />
+          <Legend 
+            formatter={(value) => {
+              const colors = {
+                'Initial Confidence': '#000',
+                'Actual Knowledge': '#000',
+                'Exit Confidence': '#000'
+              };
+              return <span style={{ color: colors[value as keyof typeof colors] }}>{value}</span>;
+            }}
+          />
           <Bar 
             dataKey="confidence" 
             name="Initial Confidence" 
-            fill="#8884d8" 
+            fill={colors.confidenceBar} 
           />
           <Bar 
             dataKey="actualKnowledge" 
             name="Actual Knowledge" 
-            fill="#ff7373" 
+            fill={colors.actualKnowledgeBar} 
           />
           <Bar 
             dataKey="exitConfidence" 
             name="Exit Confidence" 
-            fill="#82ca9d" 
+            fill={colors.exitConfidenceBar} 
           />
   
         </BarChart>

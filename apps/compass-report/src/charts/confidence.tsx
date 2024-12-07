@@ -5,6 +5,7 @@ import { useAssessmentStore } from '../store/assessmentStore';
 import { ResponseActions, useResponseStore } from '../store/responseStore';
 import { ArrowDownTrayIcon } from '@heroicons/react/24/outline';
 import { getDisplayName } from '../utilities';
+import { colors } from './colors';
 
 const areaDot = {stroke: '#ffe5a9', strokeWidth: 2, fill: 'white', r: 5};
 
@@ -127,12 +128,12 @@ export function ConfidenceChart() {
               {
                 value: 'Actual',
                 type: 'line',
-                color: '#ffb700',  // This controls the icon color
+                color: colors.actualKnowledgeArea,  // This controls the icon color
               },
               {
                 value: 'Confidence',
                 type: 'rect',
-                color: '#8db1d3',  // This controls the icon color
+                color: colors.confidenceBar,  // This controls the icon color
               }
             ]}
           />
@@ -145,15 +146,15 @@ export function ConfidenceChart() {
             yAxisId="left"
             name="Actual" 
             dot={areaDot} 
-            fill="rgba(255,205,86,.5)" 
-            stroke="#ffe5a9" 
+            fill={colors.actualKnowledgeAreaFill} 
+            stroke={colors.actualKnowledgeAreaStroke} 
           />
           <Bar 
             dataKey="averageConfidence"
             yAxisId="right"
             name="Confidence" 
             barSize={40} 
-            fill="#8db1d3"
+            fill={colors.confidenceBar}
           />
         </ComposedChart>
       </div>
