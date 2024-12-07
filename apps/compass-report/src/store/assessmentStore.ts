@@ -16,7 +16,7 @@ export interface AssessmentActions {
   setError: (error: string | null) => void;
   transformData: (transformer: (data: any[]) => dataEntry<dataEntry>[]) => void;
   getConfidenceData: () => {[key: string]: ConfidenceLevel[]};
-  getExitConfidenceByArea: <T>(area: QuestionAreaNames, asAverage: number) => {[key: string]: number[]} | {[key: string]: number} | T;
+  getExitConfidenceByArea: <T>(area: QuestionAreaNames, asAverage: number) => T;
 }
 
 function calculateConfidence(assessmentData: dataEntry<dataEntry>[]): {[key: string]: ConfidenceLevel[]} {

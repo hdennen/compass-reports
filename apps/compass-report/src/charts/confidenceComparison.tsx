@@ -13,6 +13,7 @@ import { ConfidenceLevel, QuestionAreaKeys, QuestionAreaNames } from '../enums';
 import { useEffect, useState, useRef } from 'react';
 import { ArrowDownTrayIcon } from '@heroicons/react/24/outline';
 import { getDisplayName } from '../utilities';
+import { useResponseStore } from '../store/responseStore';
 
 interface ChartData {
   area: string;
@@ -22,6 +23,7 @@ interface ChartData {
 
 export function ConfidenceComparison() {
   const { getConfidenceData, getExitConfidenceByArea, transformedData } = useAssessmentStore();
+  const responseStore = useResponseStore();
   const [chartData, setChartData] = useState<ChartData[]>([]);
   const chartRef = useRef<HTMLDivElement>(null);
   useEffect(() => {
@@ -33,18 +35,21 @@ export function ConfidenceComparison() {
         return;
       }
 
-      const exitConfidenceData = getExitConfidenceByArea(areaName as QuestionAreaNames, 2);
+      const averageExitConfidence = getExitConfidenceByArea<number>(areaName as QuestionAreaNames, 2);
+      const averageConfidence = values.reduce((sum, val) => sum + (ConfidenceLevel[val as keyof typeof ConfidenceLevel]), 0) / values.length;
 
       const displayName = getDisplayName(questionText);
+      const actualKnowledge = responseStore.getActualKnowledge()[questionText];
 
       return {     
         area: displayName,
-        confidence: values.reduce((sum, val) => sum + (ConfidenceLevel[val as keyof typeof ConfidenceLevel]), 0) / values.length,
-        exitConfidence: exitConfidenceData
+        confidence: averageConfidence,
+        exitConfidence: averageExitConfidence,
+        actualKnowledge
       }
     });
     setChartData(newChartData);
-  }, [transformedData, getConfidenceData]);
+  }, [transformedData, getConfidenceData, responseStore.transformedData]);
 
   const handleDownload = () => {
     if (chartRef.current) {
@@ -104,10 +109,16 @@ export function ConfidenceComparison() {
             fill="#8884d8" 
           />
           <Bar 
+            dataKey="actualKnowledge" 
+            name="Actual Knowledge" 
+            fill="#ff7373" 
+          />
+          <Bar 
             dataKey="exitConfidence" 
             name="Exit Confidence" 
             fill="#82ca9d" 
           />
+  
         </BarChart>
       </ResponsiveContainer>
     </div>
