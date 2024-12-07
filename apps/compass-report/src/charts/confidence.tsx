@@ -1,49 +1,15 @@
 import { ComposedChart, XAxis, YAxis, Tooltip, Legend, CartesianGrid, Area, Bar } from 'recharts';
 import { useEffect, useState, useRef } from 'react';
-import { dataEntry } from '../types';
-import { ConfidenceLevel, QuestionAreaKeys, QuestionAreaNames } from '../enums';
-import { CohortAreaConfig } from '../data';
+import { ConfidenceLevel } from '../enums';
 import { useAssessmentStore } from '../store/assessmentStore';
-import { useResponseStore } from '../store/responseStore';
+import { ResponseActions, useResponseStore } from '../store/responseStore';
 import { ArrowDownTrayIcon } from '@heroicons/react/24/outline';
 import { getDisplayName } from '../utilities';
 
 const areaDot = {stroke: '#ffe5a9', strokeWidth: 2, fill: 'white', r: 5};
 
-function calculateActualKnowledge(responseData: dataEntry<dataEntry>[], selectedCohort: string): {[key: string]: number} {
-  const actualKnowledgeData: {[key: string]: number} = {};
-  const cohortConfig = CohortAreaConfig[selectedCohort as keyof typeof CohortAreaConfig];
-
-  Object.keys(cohortConfig).forEach(section => {
-    let totalPointsAwarded = 0;
-    let totalPointsAvailable = 0;
-    let scoreCount = 0;
-  
-    cohortConfig[section as keyof typeof cohortConfig].forEach(questionKey => {
-      responseData.forEach(respondent => {
-        const responseData = respondent[questionKey];
-        if (responseData && responseData.Points) {
-          const [pointsAwardedStr, pointsAvailableStr] = responseData.Points.toString().split('/');
-          const pointsAwarded = parseFloat(pointsAwardedStr);
-          const pointsAvailable = parseFloat(pointsAvailableStr);
-  
-          if (!isNaN(pointsAwarded) && !isNaN(pointsAvailable) && pointsAvailable > 0) {
-            scoreCount++;
-            totalPointsAwarded += pointsAwarded;
-            totalPointsAvailable += pointsAvailable;
-          }
-        }
-      });
-    });
-
-    actualKnowledgeData[section] = scoreCount > 0 ? (totalPointsAwarded / totalPointsAvailable) * 100 : 0;
-  })
-
-  return actualKnowledgeData;
-}
-
-function calculateChartData(responseData: dataEntry<dataEntry>[], confidenceData: {[key: string]: ConfidenceLevel[]}, selectedCohort: string): any[] {
-  const actualKnowledgeData = calculateActualKnowledge(responseData, selectedCohort);
+function calculateChartData(responseStore: ResponseActions, confidenceData: {[key: string]: ConfidenceLevel[]}): any[] {
+  const actualKnowledgeData = responseStore.getActualKnowledge();
 
   // Transform the object into an array of data points
   return Object.entries(confidenceData).map(([questionText, values]) => {
@@ -73,7 +39,7 @@ export function ConfidenceChart() {
     if (assessmentStore.transformedData.length > 0) {
       console.log('Confidence Chart Data has been updated:', assessmentStore.transformedData);
       const confidenceData = assessmentStore.getConfidenceData();
-      const calculatedData = calculateChartData(responseStore.transformedData, confidenceData, responseStore.selectedCohort);
+      const calculatedData = calculateChartData(responseStore, confidenceData);
       setChartData(calculatedData);
     }
   }, [assessmentStore.transformedData, responseStore.transformedData, responseStore.selectedCohort]);
