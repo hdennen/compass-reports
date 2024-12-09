@@ -95,16 +95,16 @@ export function ExitConfidencePosNegChart() {
             <YAxis />
             <Tooltip />
             <Legend 
-            formatter={(value) => {
-              const textColors = {
-                'Completely sure': colors.legendText,
-                'Fairly sure': colors.legendText,
-                'Slightly unsure': colors.legendText,
-                'Completely unsure': colors.legendText
-              };
-              return <span style={{ color: textColors[value as keyof typeof textColors] }}>{value}</span>;
-            }}
-          />
+              formatter={(value) => {
+                const textColors = {
+                  'Completely sure': colors.legendText,
+                  'Fairly sure': colors.legendText,
+                  'Slightly unsure': colors.legendText,
+                  'Completely unsure': colors.legendText
+                };
+                return <span style={{ color: textColors[value as keyof typeof textColors] }}>{value}</span>;
+              }}
+            />
             <ReferenceLine y={0} stroke="#000" />
             <Bar dataKey="slightlyUnsure" name="Slightly unsure" fill={colors[ExitConfidenceNames.SlightlyUnsure]} stackId="stack" />
             <Bar dataKey="completelyUnsure" name="Completely unsure" fill={colors[ExitConfidenceNames.CompletelyUnsure]} stackId="stack" />
