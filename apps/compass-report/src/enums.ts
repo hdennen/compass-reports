@@ -7,10 +7,10 @@ export enum ConfidenceLevel {
   }
   
   export enum ExitConfidenceLevel {
-    'Completely unsure' = 65,
-    'Slightly unsure' = 75,
-    'Fairly sure' = 85,
-    'Completely sure' = 99
+    'Completely unsure' = 25,
+    'Slightly unsure' = 50,
+    'Fairly sure' = 75,
+    'Completely sure' = 100
   }
 
   export enum QuestionAreaNames {
@@ -27,4 +27,12 @@ export enum ConfidenceLevel {
     PaymentAndReimbursement = 'Payment and reimbursement, including reimbursement models, rates and incentive programs',
     PricingAndContracting = 'Pricing and contracting, including pricing benchmarks, supply chain dynamics, regulatory compliance considerations, and the various stakeholders and their contracts',
     ProductAcquisitionAndDistribution = 'Product acquisition and distribution, including the buy and bill process, specialty pharmacy, and distribution channels'
+  }
+
+  export enum ExitConfidenceKeys {
+    CodingAndBilling = 'Please take a moment to reflect on how confident you are about your knowledge relative to each subtopic covered in the Coding and Billing section you just completed.',
+    Coverage = 'Please take a moment to reflect on how confident you are about your knowledge relative to each subtopic covered in the Coverage section you just completed.',
+    PaymentAndReimbursement = 'Please take a moment to reflect on how confident you are about your knowledge relative to each subtopic covered in the Payment and Reimbursement section you just completed.',
+    PricingAndContracting = 'Please take a moment to reflect on how confident you are about your knowledge relative to each subtopic covered in the Pricing and Contracting section you just completed.',
+    ProductAcquisitionAndDistribution = 'Please take a moment to reflect on how confident you are about your knowledge relative to each subtopic covered in the Product Acquisition and Distribution section you just completed.'
   }

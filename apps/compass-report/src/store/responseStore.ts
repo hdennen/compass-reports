@@ -1,5 +1,6 @@
 import { create } from 'zustand';
 import { dataEntry } from '../types';
+import { CohortAreaConfig } from '../data';
 
 interface ResponseState {
   rawData: { [key: string]: string }[]; 
@@ -8,6 +9,7 @@ interface ResponseState {
   error: string | null;
   threshold: number;
   selectedCohort: string;
+  actualKnowledge: {[key: string]: number};
 }
 
 export interface ResponseActions {
@@ -17,6 +19,39 @@ export interface ResponseActions {
   transformData: (transformer: (data: any[]) => dataEntry<dataEntry>[]) => void;
   setThreshold: (threshold: number) => void;
   setSelectedCohort: (cohort: string) => void;
+  getActualKnowledge: () => {[key: string]: number};
+}
+
+function calculateActualKnowledge(transformedData: dataEntry<dataEntry>[], selectedCohort: string): {[key: string]: number} {
+  const actualKnowledgeData: {[key: string]: number} = {};
+  const cohortConfig = CohortAreaConfig[selectedCohort as keyof typeof CohortAreaConfig];
+
+  Object.keys(cohortConfig).forEach(section => {
+    let totalPointsAwarded = 0;
+    let totalPointsAvailable = 0;
+    let scoreCount = 0;
+  
+    cohortConfig[section as keyof typeof cohortConfig].forEach(questionKey => {
+      transformedData.forEach(respondent => {
+        const responseData = respondent[questionKey];
+        if (responseData && responseData.Points) {
+          const [pointsAwardedStr, pointsAvailableStr] = responseData.Points.toString().split('/');
+          const pointsAwarded = parseFloat(pointsAwardedStr);
+          const pointsAvailable = parseFloat(pointsAvailableStr);
+  
+          if (!isNaN(pointsAwarded) && !isNaN(pointsAvailable) && pointsAvailable > 0) {
+            scoreCount++;
+            totalPointsAwarded += pointsAwarded;
+            totalPointsAvailable += pointsAvailable;
+          }
+        }
+      });
+    });
+
+    actualKnowledgeData[section] = scoreCount > 0 ? (totalPointsAwarded / totalPointsAvailable) * 100 : 0;
+  })
+
+  return actualKnowledgeData;
 }
 
 export const useResponseStore = create<ResponseState & ResponseActions>((set, get) => ({
@@ -26,6 +61,7 @@ export const useResponseStore = create<ResponseState & ResponseActions>((set, ge
   error: null,
   threshold: 70,
   selectedCohort: 'C1',
+  actualKnowledge: {},
   setThreshold: (threshold: number) => set({ threshold }),
   setSelectedCohort: (cohort: string) => set({ selectedCohort: cohort }),
   setRawData: (data) => set({ rawData: data }),
@@ -41,5 +77,11 @@ export const useResponseStore = create<ResponseState & ResponseActions>((set, ge
       set({ error: error instanceof Error ? error.message : 'Failed to transform data' });
       console.error(error);
     }
+  },
+  getActualKnowledge: () => {
+    const { transformedData, selectedCohort } = get();
+    const actualKnowledge = calculateActualKnowledge(transformedData, selectedCohort);
+    set({ actualKnowledge });
+    return actualKnowledge;
   },
 }));
