@@ -24,8 +24,8 @@ function calculateChartData(responseStore: ResponseActions, confidenceData: {[ke
 
     return {
       name: displayName,
-      averageConfidence,
-      actualAverage
+      averageConfidence: averageConfidence.toFixed(2),
+      actualAverage: actualAverage.toFixed(2)
     };
   });
 }
