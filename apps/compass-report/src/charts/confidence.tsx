@@ -1,4 +1,4 @@
-import { ComposedChart, XAxis, YAxis, Tooltip, Legend, CartesianGrid, Area, Bar } from 'recharts';
+import { ComposedChart, XAxis, YAxis, Tooltip, Legend, CartesianGrid, Area, Bar, ResponsiveContainer } from 'recharts';
 import { useEffect, useState, useRef } from 'react';
 import { ConfidenceLevel } from '../enums';
 import { useAssessmentStore } from '../store/assessmentStore';
@@ -75,10 +75,11 @@ export function ConfidenceChart() {
           <ArrowDownTrayIcon className="h-5 w-5" />
         </button>
       </div>
-      <div ref={chartRef}>
-        <ComposedChart width={900} height={450} data={chartData} barGap={20}>
-          <XAxis
-            dataKey="name"
+      <div ref={chartRef} style={{ width: '100%', height: 450 }}>
+        <ResponsiveContainer>
+          <ComposedChart data={chartData} barGap={20}>
+            <XAxis
+              dataKey="name"
             height={60}
             interval={0}
             tick={(props) => {
@@ -93,70 +94,71 @@ export function ConfidenceChart() {
                 </text>
               );
             }}
-          />
-          <YAxis 
-            yAxisId="left"
-            orientation="left"
-            domain={[0, 100]}  // Add domain for percentage scale
-          />
-          <YAxis 
-            yAxisId="right"
-            orientation="right"
-            width={100}
-            domain={[0, 100]}  // Add domain for percentage scale
-            ticks={[25, 50, 75, 100]}
-            tickFormatter={(value) => {
-              const labels = {
-                25: ConfidenceLevel[25],
-                50: ConfidenceLevel[50],
-                75: ConfidenceLevel[75],
-                100: ConfidenceLevel[100]
-              };
-              return labels[value as keyof typeof labels] || value;
-            }}
-          />
-          <Tooltip />
-          <Legend 
-            formatter={(value) => {
-              const colors = {
-                'Actual': '#000',
-                'Confidence': '#000'
-              };
-              return <span style={{ color: colors[value as keyof typeof colors] }}>{value}</span>;
-            }}
-            payload={[
-              {
-                value: 'Actual',
-                type: 'line',
-                color: colors.actualKnowledgeArea,  // This controls the icon color
-              },
-              {
-                value: 'Confidence',
-                type: 'rect',
-                color: colors.confidenceBar,  // This controls the icon color
-              }
-            ]}
-          />
-          <CartesianGrid 
-            stroke="#dadbdd" 
-          />
-          <Area 
-            type="monotone" 
-            dataKey="actualAverage" 
-            yAxisId="left"
-            name="Actual" 
-            dot={areaDot} 
-            fill={colors.actualKnowledgeAreaFill} 
-            stroke={colors.actualKnowledgeAreaStroke} 
-          />
-          <Bar 
-            dataKey="averageConfidence"
-            yAxisId="right"
-            name="Confidence" 
-            barSize={40} 
-            fill={colors.confidenceBar}
-          />
-        </ComposedChart>
+            />
+            <YAxis 
+              yAxisId="left"
+              orientation="left"
+              domain={[0, 100]}  // Add domain for percentage scale
+            />
+            <YAxis 
+              yAxisId="right"
+              orientation="right"
+              width={100}
+              domain={[0, 100]}  // Add domain for percentage scale
+              ticks={[25, 50, 75, 100]}
+              tickFormatter={(value) => {
+                const labels = {
+                  25: ConfidenceLevel[25],
+                  50: ConfidenceLevel[50],
+                  75: ConfidenceLevel[75],
+                  100: ConfidenceLevel[100]
+                };
+                return labels[value as keyof typeof labels] || value;
+              }}
+            />
+            <Tooltip />
+            <Legend 
+              formatter={(value) => {
+                const textColors = {
+                  'Actual': colors.legendText,
+                  'Confidence': colors.legendText
+                };
+                return <span style={{ color: textColors[value as keyof typeof textColors] }}>{value}</span>;
+              }}
+              payload={[
+                {
+                  value: 'Actual',
+                  type: 'line',
+                  color: colors.actualKnowledgeArea,  // This controls the icon color
+                },
+                {
+                  value: 'Confidence',
+                  type: 'rect',
+                  color: colors.confidenceBar,  // This controls the icon color
+                }
+              ]}
+            />
+            <CartesianGrid 
+              stroke="#dadbdd" 
+            />
+            <Area 
+              type="monotone" 
+              dataKey="actualAverage" 
+              yAxisId="left"
+              name="Actual" 
+              dot={areaDot} 
+              fill={colors.actualKnowledgeAreaFill} 
+              stroke={colors.actualKnowledgeAreaStroke} 
+            />
+            <Bar 
+              dataKey="averageConfidence"
+              yAxisId="right"
+              name="Confidence" 
+              barSize={40} 
+              fill={colors.confidenceBar}
+            />
+          </ComposedChart>
+        </ResponsiveContainer>
       </div>
     </div>
   );

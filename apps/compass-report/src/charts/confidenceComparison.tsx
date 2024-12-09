@@ -79,7 +79,7 @@ export function ConfidenceComparison() {
         title="Download Chart"
       >
         <ArrowDownTrayIcon className="h-5 w-5" />
-        </button>
+      </button>
       </div>
       <div style={{ width: '100%', height: 400 }}>
         <ResponsiveContainer>
@@ -116,12 +116,12 @@ export function ConfidenceComparison() {
           <Tooltip />
           <Legend 
             formatter={(value) => {
-              const colors = {
-                'Initial Confidence': '#000',
-                'Actual Knowledge': '#000',
-                'Exit Confidence': '#000'
+              const textColors = {
+                'Initial Confidence': colors.legendText,
+                'Actual Knowledge': colors.legendText,
+                'Exit Confidence': colors.legendText
               };
-              return <span style={{ color: colors[value as keyof typeof colors] }}>{value}</span>;
+              return <span style={{ color: textColors[value as keyof typeof textColors] }}>{value}</span>;
             }}
           />
           <Bar 

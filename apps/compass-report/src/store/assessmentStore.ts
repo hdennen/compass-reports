@@ -16,6 +16,7 @@ export interface AssessmentActions {
   setError: (error: string | null) => void;
   transformData: (transformer: (data: any[]) => dataEntry<dataEntry>[]) => void;
   getConfidenceData: () => {[key: string]: ConfidenceLevel[]};
+  getExitConfidenceCounts: () => {[key: string]: { [key: string]: number }};
   getExitConfidenceByArea: <T>(area: QuestionAreaNames, asAverage: number) => T;
 }
 
@@ -56,6 +57,28 @@ export const useAssessmentStore = create<AssessmentState & AssessmentActions>((s
       return calculatedConfidenceData;
     }
     return confidenceData;
+  },
+  getExitConfidenceCounts: () => {
+    const { transformedData } = get();
+    const exitConfidenceCounts: { [key: string]: { [key: string]: number } } = {};
+
+    transformedData.forEach(respondent => {
+      Object.keys(respondent).forEach(exitConfidenceKey => {
+        if (Object.values(ExitConfidenceKeys).includes(exitConfidenceKey as ExitConfidenceKeys)) {
+          const exitConfidenceResponses = respondent[exitConfidenceKey];
+
+          Object.entries(exitConfidenceResponses).forEach(([key, value]) => {
+            if (Object.values(ExitConfidenceLevel).includes(value as ExitConfidenceLevel)) {
+              if (!exitConfidenceCounts[exitConfidenceKey]) {
+                exitConfidenceCounts[exitConfidenceKey] = {};
+              }
+              exitConfidenceCounts[exitConfidenceKey][value as string] = (exitConfidenceCounts[exitConfidenceKey][value as string] || 0) + 1;
+            }
+          });
+        }
+      });
+    });
+    return exitConfidenceCounts;
   },
   getExitConfidenceByArea: (area: QuestionAreaNames, asAverage: number) => {
     const { transformedData } = get();
