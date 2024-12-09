@@ -44,9 +44,9 @@ export function ConfidenceComparison() {
 
       return {     
         area: displayName,
-        confidence: averageConfidence,
-        exitConfidence: averageExitConfidence,
-        actualKnowledge
+        confidence: averageConfidence.toFixed(2),
+        exitConfidence: averageExitConfidence.toFixed(2),
+        actualKnowledge: actualKnowledge.toFixed(2)
       }
     });
     setChartData(newChartData);
