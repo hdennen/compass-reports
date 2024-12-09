@@ -57,7 +57,7 @@ export function ExitConfidencePosNegChart() {
   return (
     <div className="bg-white rounded-lg shadow-lg p-6 flex flex-col items-center">
       <div className="w-full flex justify-between items-center mb-6">
-        <h1 className="text-2xl font-bold text-gray-800">Exit Confidence</h1>
+        <h1 className="text-2xl font-bold text-gray-800">Exit Confidence Detail View</h1>
         <button
           onClick={handleDownload}
           className="p-2 bg-blue-600 text-white rounded-full hover:bg-blue-700 transition-colors"
@@ -95,16 +95,16 @@ export function ExitConfidencePosNegChart() {
             <YAxis />
             <Tooltip />
             <Legend 
-            formatter={(value) => {
-              const textColors = {
-                'Completely sure': colors.legendText,
-                'Fairly sure': colors.legendText,
-                'Slightly unsure': colors.legendText,
-                'Completely unsure': colors.legendText
-              };
-              return <span style={{ color: textColors[value as keyof typeof textColors] }}>{value}</span>;
-            }}
-          />
+              formatter={(value) => {
+                const textColors = {
+                  'Completely sure': colors.legendText,
+                  'Fairly sure': colors.legendText,
+                  'Slightly unsure': colors.legendText,
+                  'Completely unsure': colors.legendText
+                };
+                return <span style={{ color: textColors[value as keyof typeof textColors] }}>{value}</span>;
+              }}
+            />
             <ReferenceLine y={0} stroke="#000" />
             <Bar dataKey="slightlyUnsure" name="Slightly unsure" fill={colors[ExitConfidenceNames.SlightlyUnsure]} stackId="stack" />
             <Bar dataKey="completelyUnsure" name="Completely unsure" fill={colors[ExitConfidenceNames.CompletelyUnsure]} stackId="stack" />

@@ -1,7 +1,8 @@
 import { useEffect, useState } from 'react';
 import { useAssessmentStore } from '../store/assessmentStore';
 import { useResponseStore } from '../store/responseStore';
-import { ConfidenceLevel } from '../enums';
+import { ConfidenceLevel, QuestionAreaNames } from '../enums';
+import { ExitConfidenceDetailedChart } from '../charts/exitConfidenceDetailed';
 
 interface SectionAnalysisProps {
   sectionQuestions: string[];
@@ -96,6 +97,7 @@ export function SectionAnalysis({ sectionQuestions, sectionName, sectionKey }: S
         <p className="text-lg mb-4">
           <strong>Overall Correct:</strong> {overallCorrect.toFixed(2)}%
         </p>
+        <ExitConfidenceDetailedChart areaName={sectionName as QuestionAreaNames} />
         <h3 className="text-xl font-semibold mb-2">Most missed questions (below {threshold}% Correct):</h3>
         <ul className="list-disc pl-5">
           {belowThresholdQuestions.map((question, index) => (

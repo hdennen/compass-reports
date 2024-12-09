@@ -90,15 +90,14 @@ export function App() {
           <div className="mb-8">
             <ConfidenceChart />
           </div>
-
           <div className="mb-8">
-            <ConfidenceComparison />
+            <KnowledgeConfidenceLevelsChart />
           </div>
           <div className="mb-8">
             <ExitConfidencePosNegChart />
           </div>
           <div className="mb-8">
-            <KnowledgeConfidenceLevelsChart />
+            <ConfidenceComparison />
           </div>
           <div className="mb-8">
             <SectionAnalysis sectionName={QuestionAreaNames.CodingAndBilling} sectionKey={QuestionAreaKeys.CodingAndBilling} sectionQuestions={codingAndBillingQuestions} />

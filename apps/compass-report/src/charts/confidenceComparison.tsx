@@ -72,7 +72,7 @@ export function ConfidenceComparison() {
   return (
     <div className="bg-white rounded-lg shadow-lg p-6 flex flex-col items-center">
     <div className="w-full flex justify-between items-center mb-6">
-      <h1 className="text-2xl font-bold text-gray-800">Confidence Comparison</h1>
+      <h1 className="text-2xl font-bold text-gray-800">Entry Confidence vs Knowledge vs Exit Confidence (AVG)</h1>
       <button
         onClick={handleDownload}
         className="p-2 bg-blue-600 text-white rounded-full hover:bg-blue-700 transition-colors"
