@@ -11,6 +11,7 @@ import { CohortAreaConfig } from '../data';
 import { QuestionAreaKeys, QuestionAreaNames } from '../enums';
 import { ConfidenceComparison } from '../charts/confidenceComparison';
 import { ExitConfidencePosNegChart } from '../charts/exitConfidencePosNeg';
+import { KnowledgeConfidenceLevelsChart } from '../charts/knowledgeConfidenceLevels';
 
 export function App() {
   const assessmentStore = useAssessmentStore();
@@ -95,6 +96,9 @@ export function App() {
           </div>
           <div className="mb-8">
             <ExitConfidencePosNegChart />
+          </div>
+          <div className="mb-8">
+            <KnowledgeConfidenceLevelsChart />
           </div>
           <div className="mb-8">
             <SectionAnalysis sectionName={QuestionAreaNames.CodingAndBilling} sectionKey={QuestionAreaKeys.CodingAndBilling} sectionQuestions={codingAndBillingQuestions} />

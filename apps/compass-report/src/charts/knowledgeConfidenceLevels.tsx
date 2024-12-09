@@ -9,7 +9,7 @@ import {
   ResponsiveContainer 
 } from 'recharts';
 import { useAssessmentStore } from '../store/assessmentStore';
-import { ConfidenceLevel, QuestionAreaKeys, QuestionAreaNames } from '../enums';
+import { EntryConfidenceNames, QuestionAreaKeys } from '../enums';
 import { useEffect, useState, useRef } from 'react';
 import { ArrowDownTrayIcon } from '@heroicons/react/24/outline';
 import { getDisplayName } from '../utilities';
@@ -22,7 +22,7 @@ interface ChartData {
   exitConfidence: number;
 }
 
-export function ConfidenceComparison() {
+export function KnowledgeConfidenceLevelsChart() {
   const { getConfidenceData, getExitConfidenceByArea, transformedData } = useAssessmentStore();
   const responseStore = useResponseStore();
   const [chartData, setChartData] = useState<ChartData[]>([]);
@@ -36,17 +36,21 @@ export function ConfidenceComparison() {
         return;
       }
 
-      const averageExitConfidence = getExitConfidenceByArea<number>(areaName as QuestionAreaNames, 2);
-      const averageConfidence = values.reduce((sum, val) => sum + (ConfidenceLevel[val as keyof typeof ConfidenceLevel]), 0) / values.length;
+      const counts = values.reduce((acc, val) => {
+        acc[val] = (acc[val] || 0) + 1;
+        return acc;
+      }, {} as Record<string, number>);
 
       const displayName = getDisplayName(questionText);
       const actualKnowledge = responseStore.getActualKnowledge()[questionText];
 
       return {     
         area: displayName,
-        confidence: averageConfidence,
-        exitConfidence: averageExitConfidence,
-        actualKnowledge
+        actualKnowledge: actualKnowledge.toFixed(2),
+        veryLimited: (counts[EntryConfidenceNames.VeryLimited] / values.length * 100 || 0).toFixed(2),
+        foundational: (counts[EntryConfidenceNames.Foundational] / values.length * 100 || 0).toFixed(2),
+        advanced: (counts[EntryConfidenceNames.Advanced] / values.length * 100 || 0).toFixed(2),
+        expert: (counts[EntryConfidenceNames.Expert] / values.length * 100 || 0).toFixed(2)
       }
     });
     setChartData(newChartData);
@@ -72,7 +76,7 @@ export function ConfidenceComparison() {
   return (
     <div className="bg-white rounded-lg shadow-lg p-6 flex flex-col items-center">
     <div className="w-full flex justify-between items-center mb-6">
-      <h1 className="text-2xl font-bold text-gray-800">Confidence Comparison</h1>
+      <h1 className="text-2xl font-bold text-gray-800">Knowledge to Confidence Levels</h1>
       <button
         onClick={handleDownload}
         className="p-2 bg-blue-600 text-white rounded-full hover:bg-blue-700 transition-colors"
@@ -117,29 +121,44 @@ export function ConfidenceComparison() {
           <Legend 
             formatter={(value) => {
               const textColors = {
-                'Initial Confidence': colors.legendText,
                 'Actual Knowledge': colors.legendText,
-                'Exit Confidence': colors.legendText
+                'Very Limited': colors.legendText,
+                'Foundational': colors.legendText,
+                'Advanced': colors.legendText,
+                'Expert': colors.legendText
               };
               return <span style={{ color: textColors[value as keyof typeof textColors] }}>{value}</span>;
             }}
           />
           <Bar 
-            dataKey="confidence" 
-            name="Initial Confidence" 
-            fill={colors.confidenceBar} 
-          />
-          <Bar 
             dataKey="actualKnowledge" 
             name="Actual Knowledge" 
             fill={colors.actualKnowledgeBar} 
+          />  
+          <Bar 
+            dataKey="veryLimited" 
+            name="Very Limited" 
+            fill={colors.veryLimited} 
+            stackId="stack"
           />
           <Bar 
-            dataKey="exitConfidence" 
-            name="Exit Confidence" 
-            fill={colors.exitConfidenceBar} 
+            dataKey="foundational" 
+            name="Foundational" 
+            fill={colors.foundational} 
+            stackId="stack"
           />
-  
+          <Bar 
+            dataKey="advanced" 
+            name="Advanced" 
+            fill={colors.advanced} 
+            stackId="stack"
+          />
+          <Bar 
+            dataKey="expert" 
+            name="Expert" 
+            fill={colors.expert} 
+            stackId="stack"
+          />
         </BarChart>
       </ResponsiveContainer>
     </div>

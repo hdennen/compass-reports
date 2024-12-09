@@ -6,9 +6,13 @@ export const colors = {
   actualKnowledgeAreaStroke: '#ffe5a9',
   exitConfidenceBar: '#82ca9d',
   confidenceBar: '#8db1d3',
-  [ExitConfidenceNames.CompletelyUnsure]: '#ff7373',
-  [ExitConfidenceNames.SlightlyUnsure]: '#ffe5a9',
-  [ExitConfidenceNames.FairlySure]: '#82ca9d',
-  [ExitConfidenceNames.CompletelySure]: '#8db1d3',
-  legendText: '#000'
+  [ExitConfidenceNames.CompletelyUnsure]: '#E14B4B',
+  [ExitConfidenceNames.SlightlyUnsure]: '#F59B9B',
+  [ExitConfidenceNames.FairlySure]: '#AEF59B',
+  [ExitConfidenceNames.CompletelySure]: '#29BF00',
+  legendText: '#000',
+  veryLimited: 'rgb(236, 236, 243)',
+  foundational: 'rgb(204, 216, 232)',
+  advanced: 'rgb(173, 196, 222)',
+  expert: 'rgb(141, 177, 211)'
 }
