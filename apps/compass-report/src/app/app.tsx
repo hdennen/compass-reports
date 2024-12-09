@@ -10,6 +10,7 @@ import { SectionAnalysis } from '../components/sectionAnalysis';
 import { CohortAreaConfig } from '../data';
 import { QuestionAreaKeys, QuestionAreaNames } from '../enums';
 import { ConfidenceComparison } from '../charts/confidenceComparison';
+import { ExitConfidencePosNegChart } from '../charts/exitConfidencePosNeg';
 
 export function App() {
   const assessmentStore = useAssessmentStore();
@@ -88,8 +89,12 @@ export function App() {
           <div className="mb-8">
             <ConfidenceChart />
           </div>
+
           <div className="mb-8">
             <ConfidenceComparison />
+          </div>
+          <div className="mb-8">
+            <ExitConfidencePosNegChart />
           </div>
           <div className="mb-8">
             <SectionAnalysis sectionName={QuestionAreaNames.CodingAndBilling} sectionKey={QuestionAreaKeys.CodingAndBilling} sectionQuestions={codingAndBillingQuestions} />
