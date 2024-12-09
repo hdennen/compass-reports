@@ -3,6 +3,7 @@ import { useAssessmentStore } from '../store/assessmentStore';
 import { useResponseStore } from '../store/responseStore';
 import { ConfidenceLevel, QuestionAreaNames } from '../enums';
 import { ExitConfidenceDetailedChart } from '../charts/exitConfidenceDetailed';
+import { ExitConfidenceDetailedPieChart } from '../charts/exitConfidenceDetailedPie';
 
 interface SectionAnalysisProps {
   sectionQuestions: string[];
@@ -97,7 +98,13 @@ export function SectionAnalysis({ sectionQuestions, sectionName, sectionKey }: S
         <p className="text-lg mb-4">
           <strong>Overall Correct:</strong> {overallCorrect.toFixed(2)}%
         </p>
-        <ExitConfidenceDetailedChart areaName={sectionName as QuestionAreaNames} />
+        <div className="flex flex-row">
+          <ExitConfidenceDetailedChart areaName={sectionName as QuestionAreaNames} />
+          
+        </div>
+        <div className="flex flex-row">
+          <ExitConfidenceDetailedPieChart areaName={sectionName as QuestionAreaNames} />
+        </div>
         <h3 className="text-xl font-semibold mb-2">Most missed questions (below {threshold}% Correct):</h3>
         <ul className="list-disc pl-5">
           {belowThresholdQuestions.map((question, index) => (
