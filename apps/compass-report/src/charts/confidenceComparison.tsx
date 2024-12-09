@@ -81,7 +81,7 @@ export function ConfidenceComparison() {
         <ArrowDownTrayIcon className="h-5 w-5" />
       </button>
       </div>
-      <div style={{ width: '100%', height: 400 }}>
+      <div style={{ width: '100%', height: 400 }} ref={chartRef}>
         <ResponsiveContainer>
         <BarChart
           data={chartData}
