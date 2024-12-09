@@ -1,6 +1,5 @@
 import { Bar, Tooltip, Legend, CartesianGrid, ComposedChart, YAxis, XAxis, Area, ResponsiveContainer, BarChart } from 'recharts';
-import { dataEntry } from '../types';
-import { ExitConfidenceKeys, ExitConfidenceLevel, QuestionAreaNames } from '../enums';
+import { ExitConfidenceLevel, QuestionAreaNames } from '../enums';
 import { useState } from 'react';
 import { useEffect } from 'react';
 import { useAssessmentStore } from '../store/assessmentStore';
@@ -25,7 +24,7 @@ interface ExitConfidenceChartProps {
 }
 
 
-export function ExitConfidenceChart({ areaName }: ExitConfidenceChartProps) {
+export function ExitConfidenceDetailedChart({ areaName }: ExitConfidenceChartProps) {
     const [confidenceData, setConfidenceData] = useState<any[]>([]);
     const { getExitConfidenceByArea, transformedData } = useAssessmentStore();
 
@@ -70,5 +69,5 @@ export function ExitConfidenceChart({ areaName }: ExitConfidenceChartProps) {
   );
 };
 
-export default ExitConfidenceChart;
+export default ExitConfidenceDetailedChart;
 
