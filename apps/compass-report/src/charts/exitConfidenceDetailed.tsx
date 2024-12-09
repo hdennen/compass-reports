@@ -1,5 +1,5 @@
-import { Bar, Tooltip, Legend, CartesianGrid, ComposedChart, YAxis, XAxis, Area, ResponsiveContainer, BarChart } from 'recharts';
-import { ExitConfidenceLevel, ExitConfidenceNames, QuestionAreaNames } from '../enums';
+import { Bar, Tooltip, Legend, CartesianGrid, YAxis, XAxis, ResponsiveContainer, BarChart } from 'recharts';
+import { ExitConfidenceNames, QuestionAreaNames } from '../enums';
 import { useState } from 'react';
 import { useEffect } from 'react';
 import { useAssessmentStore } from '../store/assessmentStore';
