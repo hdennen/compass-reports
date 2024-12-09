@@ -7,11 +7,10 @@ import {
   Tooltip,
   Legend,
   ResponsiveContainer,
-  ComposedChart,
   ReferenceLine,
 } from "recharts";
 import { useAssessmentStore } from "../store/assessmentStore";
-import { ExitConfidenceKeys, ExitConfidenceNames, QuestionAreaNames } from "../enums";
+import { ExitConfidenceNames } from "../enums";
 import { colors } from "./colors";
 import { ArrowDownTrayIcon } from "@heroicons/react/24/outline";
 import { useEffect, useRef, useState } from "react";
@@ -27,7 +26,6 @@ export function ExitConfidencePosNegChart() {
     const confidenceCounts = getExitConfidenceCounts();
   
     const newChartData = Object.keys(confidenceCounts)
-      // .sort(([a], [b]) => a.localeCompare(b))
       .map((key, value) => ({
         area: getDisplayNameForExitConfidence(key),
         completelySure: confidenceCounts[key][ExitConfidenceNames.CompletelySure] || 0,
