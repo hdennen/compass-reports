@@ -5,6 +5,13 @@ export enum ConfidenceLevel {
     'Advanced' = 75,
     'Expert' = 100
   }
+
+  export enum EntryConfidenceNames {
+    VeryLimited = 'Very limited',
+    Foundational = 'Foundational',
+    Advanced = 'Advanced',
+    Expert = 'Expert'
+  }
   
   export enum ExitConfidenceLevel {
     'Completely unsure' = 25,
