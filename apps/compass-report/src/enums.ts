@@ -13,6 +13,13 @@ export enum ConfidenceLevel {
     'Completely sure' = 100
   }
 
+  export enum ExitConfidenceNames {
+    CompletelyUnsure = 'Completely unsure',
+    SlightlyUnsure = 'Slightly unsure',
+    FairlySure = 'Fairly sure',
+    CompletelySure = 'Completely sure'
+  }
+
   export enum QuestionAreaNames {
     CodingAndBilling = 'Coding and Billing',
     Coverage = 'Coverage',
