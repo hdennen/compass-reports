@@ -17,7 +17,7 @@ export interface AssessmentActions {
   transformData: (transformer: (data: any[]) => dataEntry<dataEntry>[]) => void;
   getConfidenceData: () => {[key: string]: ConfidenceLevel[]};
   getExitConfidenceCounts: () => {[key: string]: { [key: string]: number }};
-  getExitConfidenceByArea: <T>(area: QuestionAreaNames, asAverage: number) => T;
+  getExitConfidenceByArea: <T>(area: QuestionAreaNames, asAverage?: number) => T;
 }
 
 function calculateConfidence(assessmentData: dataEntry<dataEntry>[]): {[key: string]: ConfidenceLevel[]} {
@@ -80,16 +80,22 @@ export const useAssessmentStore = create<AssessmentState & AssessmentActions>((s
     });
     return exitConfidenceCounts;
   },
-  getExitConfidenceByArea: (area: QuestionAreaNames, asAverage: number) => {
+  getExitConfidenceByArea: <T>(area: QuestionAreaNames, asAverage?: number): T => {
     const { transformedData } = get();
     const exitConfidenceData: { [key: string]: number[] } = {};
 
-    const questionText = ExitConfidenceKeys[area as keyof typeof ExitConfidenceKeys];
+    let questionText = ExitConfidenceKeys[area as keyof typeof ExitConfidenceKeys];
+    if (!questionText) {
+      const areaKey = Object.keys(QuestionAreaNames).find(
+        key => QuestionAreaNames[key as keyof typeof QuestionAreaNames] === area
+      );
+      questionText = ExitConfidenceKeys[areaKey as keyof typeof ExitConfidenceKeys];
+    }
 
     transformedData.forEach(item => {
       const exitConfidence = item[questionText];
       if (!exitConfidence) {
-          console.warn('No exit confidence data found for ' + area);
+          console.warn('No exit confidence data found for ' + questionText);
           return;
       }
   
@@ -113,7 +119,7 @@ export const useAssessmentStore = create<AssessmentState & AssessmentActions>((s
         exitConfidenceDataAverageBySubSections[key] = average;
       });
 
-      return exitConfidenceDataAverageBySubSections;
+      return exitConfidenceDataAverageBySubSections as T;
     }
 
     if (asAverage === 2) {
@@ -127,10 +133,10 @@ export const useAssessmentStore = create<AssessmentState & AssessmentActions>((s
 
       exitConfidenceDataAverageByArea = totalValues / totalEntries;
 
-      return exitConfidenceDataAverageByArea;
+      return exitConfidenceDataAverageByArea as T;
     }
 
-    return exitConfidenceData;
+    return exitConfidenceData as T;
   },
   setRawData: (data) => set({ rawData: data }),
   setLoading: (loading) => set({ isLoading: loading }),
