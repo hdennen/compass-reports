@@ -30,10 +30,10 @@ export function ExitConfidencePosNegChart() {
       // .sort(([a], [b]) => a.localeCompare(b))
       .map((key, value) => ({
         area: getDisplayNameForExitConfidence(key),
-        completelySure: confidenceCounts[key][ExitConfidenceNames.CompletelySure],
-        fairlySure: confidenceCounts[key][ExitConfidenceNames.FairlySure],
-        slightlyUnsure: -confidenceCounts[key][ExitConfidenceNames.SlightlyUnsure],
-        completelyUnsure: -confidenceCounts[key][ExitConfidenceNames.CompletelyUnsure],
+        completelySure: confidenceCounts[key][ExitConfidenceNames.CompletelySure] || 0,
+        fairlySure: confidenceCounts[key][ExitConfidenceNames.FairlySure] || 0,
+        slightlyUnsure: -confidenceCounts[key][ExitConfidenceNames.SlightlyUnsure] || 0,
+        completelyUnsure: -confidenceCounts[key][ExitConfidenceNames.CompletelyUnsure] || 0,
     }));
     setChartData(newChartData);
   }, [transformedData, getExitConfidenceCounts]);  
