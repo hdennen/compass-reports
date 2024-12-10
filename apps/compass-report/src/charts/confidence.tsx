@@ -129,7 +129,7 @@ export function ConfidenceChart() {
                 {
                   value: 'Actual',
                   type: 'line',
-                  color: colors.actualKnowledgeArea,  // This controls the icon color
+                  color: colors.actualKnowledgeAreaStroke,  // This controls the icon color
                 },
                 {
                   value: 'Confidence',
