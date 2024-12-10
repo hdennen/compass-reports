@@ -4,9 +4,9 @@ import { useResponseStore } from '../store/responseStore';
 import { ConfidenceLevel, QuestionAreaNames } from '../enums';
 import { ExitConfidenceDetailedChart } from '../charts/exitConfidenceDetailed';
 import { ExitConfidenceDetailedPieChart } from '../charts/exitConfidenceDetailedPie';
+import { CohortAreaConfig } from '../data';
 
 interface SectionAnalysisProps {
-  sectionQuestions: string[];
   sectionName: string;
   sectionKey: string;
 }
@@ -64,14 +64,16 @@ function calculateQuestionData(questionsBelowThreshold: string[], responseData: 
 }
 
 
-export function SectionAnalysis({ sectionQuestions, sectionName, sectionKey }: SectionAnalysisProps) {
-  const { transformedData: responseData, threshold } = useResponseStore();
+export function SectionAnalysis({ sectionName, sectionKey }: SectionAnalysisProps) {
+  const { transformedData: responseData, threshold, selectedCohort } = useResponseStore();
   const [confidenceScore, setConfidenceScore] = useState<number>(0);
   const [overallCorrect, setOverallCorrect] = useState<number>(0);
   const [belowThresholdQuestions, setBelowSeventyQuestions] = useState<{question: string, pointsAwarded: number, pointsAvailable: number}[]>([]);
   const assessmentStore = useAssessmentStore();
   useEffect(() => {
     if (responseData.length > 0) {
+      const sectionQuestions = CohortAreaConfig[selectedCohort][sectionKey];
+
       const { totalCorrect, totalScore, questionsBelowThreshold } = calculateScores(sectionQuestions, responseData, threshold);
       const confidenceData = assessmentStore.getConfidenceData();
       if (confidenceData[sectionKey]) {
@@ -86,7 +88,7 @@ export function SectionAnalysis({ sectionQuestions, sectionName, sectionKey }: S
       setBelowSeventyQuestions(belowThresholdQuestionsData);
 
     }
-  }, [responseData, sectionQuestions, threshold]);
+  }, [responseData, sectionKey, threshold]);
 
   return (
     <div className="bg-white rounded-lg shadow-lg p-6">

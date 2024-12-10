@@ -21,12 +21,6 @@ export function App() {
     setIsDrawerOpen(!isDrawerOpen);
   };
 
-  const codingAndBillingQuestions = CohortAreaConfig[responseStore.selectedCohort][QuestionAreaKeys.CodingAndBilling];
-  const coverageQuestions = CohortAreaConfig[responseStore.selectedCohort][QuestionAreaKeys.Coverage];
-  const paymentAndReimbursementQuestions = CohortAreaConfig[responseStore.selectedCohort][QuestionAreaKeys.PaymentAndReimbursement];
-  const pricingAndContractingQuestions = CohortAreaConfig[responseStore.selectedCohort][QuestionAreaKeys.PricingAndContracting];
-  const productAcquisitionAndDistributionQuestions = CohortAreaConfig[responseStore.selectedCohort][QuestionAreaKeys.ProductAcquisitionAndDistribution];
-
   return (
     <div className="relative">
       <div className={`fixed inset-y-0 left-0 w-75 min-w-[16rem] bg-white shadow-lg transform ${isDrawerOpen ? 'translate-x-0' : '-translate-x-full'} transition-transform duration-300 ease-in-out`}>
@@ -100,19 +94,19 @@ export function App() {
             <ConfidenceComparison />
           </div>
           <div className="mb-8">
-            <SectionAnalysis sectionName={QuestionAreaNames.CodingAndBilling} sectionKey={QuestionAreaKeys.CodingAndBilling} sectionQuestions={codingAndBillingQuestions} />
+            <SectionAnalysis sectionName={QuestionAreaNames.CodingAndBilling} sectionKey={QuestionAreaKeys.CodingAndBilling} />
           </div>
           <div className="mb-8">
-            <SectionAnalysis sectionName={QuestionAreaNames.Coverage} sectionKey={QuestionAreaKeys.Coverage} sectionQuestions={coverageQuestions} />
+            <SectionAnalysis sectionName={QuestionAreaNames.Coverage} sectionKey={QuestionAreaKeys.Coverage} />
           </div>
           <div className="mb-8">
-            <SectionAnalysis sectionName={QuestionAreaNames.PaymentAndReimbursement} sectionKey={QuestionAreaKeys.PaymentAndReimbursement} sectionQuestions={paymentAndReimbursementQuestions} />
+            <SectionAnalysis sectionName={QuestionAreaNames.PaymentAndReimbursement} sectionKey={QuestionAreaKeys.PaymentAndReimbursement} />
           </div>
           <div className="mb-8">
-            <SectionAnalysis sectionName={QuestionAreaNames.PricingAndContracting} sectionKey={QuestionAreaKeys.PricingAndContracting} sectionQuestions={pricingAndContractingQuestions} />
+            <SectionAnalysis sectionName={QuestionAreaNames.PricingAndContracting} sectionKey={QuestionAreaKeys.PricingAndContracting} />
           </div>
           <div className="mb-8">
-            <SectionAnalysis sectionName={QuestionAreaNames.ProductAcquisitionAndDistribution} sectionKey={QuestionAreaKeys.ProductAcquisitionAndDistribution} sectionQuestions={productAcquisitionAndDistributionQuestions} />
+            <SectionAnalysis sectionName={QuestionAreaNames.ProductAcquisitionAndDistribution} sectionKey={QuestionAreaKeys.ProductAcquisitionAndDistribution} />
           </div>
 
         </div>
