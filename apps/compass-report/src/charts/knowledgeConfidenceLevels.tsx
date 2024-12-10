@@ -59,7 +59,7 @@ export function KnowledgeConfidenceLevelsChart() {
   return (
     <div className="bg-white rounded-lg shadow-lg p-6 flex flex-col items-center">
       <div className="w-full flex justify-between items-center mb-6">
-        <h1 className="text-2xl font-bold text-gray-800">Knowledge vs. Entry Confidence Detail View</h1>
+        <h1 className="text-2xl font-bold text-gray-800">Reported Knowledge vs. Assessment Score</h1>
         <DownloadButton chartRef={chartRef} />
       </div>
       <div style={{ width: '100%', height: 400 }} ref={chartRef}>
