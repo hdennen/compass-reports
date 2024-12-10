@@ -1,9 +1,9 @@
 import { Bar, Tooltip, Legend, CartesianGrid, YAxis, XAxis, ResponsiveContainer, BarChart, ReferenceLine } from 'recharts';
 import { ExitConfidenceNames, QuestionAreaNames } from '../enums';
-import { useState } from 'react';
-import { useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { useAssessmentStore } from '../store/assessmentStore';
 import { colors } from './colors';
+import { ArrowDownTrayIcon } from '@heroicons/react/24/outline';
 
 function calculateChartData(exitConfidenceData: { [key: string]: string[] }): any[] {
 
@@ -29,7 +29,7 @@ interface ExitConfidenceChartProps {
 export function ExitConfidenceDetailedChart({ areaName }: ExitConfidenceChartProps) {
     const [confidenceData, setConfidenceData] = useState<any[]>([]);
     const { getExitConfidenceByArea, transformedData } = useAssessmentStore();
-
+    const chartRef = useRef<HTMLDivElement>(null);
   useEffect(() => {
     if (transformedData.length > 0) {
       const exitConfidenceData = getExitConfidenceByArea<{ [key: string]: string[] }>(areaName as QuestionAreaNames);
@@ -38,61 +38,92 @@ export function ExitConfidenceDetailedChart({ areaName }: ExitConfidenceChartPro
     }
   }, [transformedData]);
 
+  const handleDownload = () => {
+    if (chartRef.current) {
+      // Use html-to-image to capture the chart
+      import('html-to-image').then(({ toPng }) => {
+        toPng(chartRef.current!)
+          .then((dataUrl) => {
+            const link = document.createElement('a');
+            link.download = 'confidence-comparison.png';
+            link.href = dataUrl;
+            link.click();
+          })
+          .catch((err) => {
+            console.error('Error downloading chart:', err);
+          });
+      });
+    }
+  };
 
   return (
-    <div className="p-6" style={{ width: '100%', height: 400 }}>
-      <ResponsiveContainer width="100%" height="100%">
-        <BarChart 
-          data={confidenceData} 
-          barGap={20}
-          stackOffset="sign"
-        >  
-          <XAxis 
-            dataKey="name" 
-            height={60}
-            interval={0}
-            tick={(props) => {
-                const { x, y, payload } = props;
-                return (
-                  <text x={x} y={y} dy={16} textAnchor="middle" fill="#666">
-                    <tspan x={x} textAnchor="middle">
-                      {payload.value.length > 20 
-                        ? `${payload.value.substring(0, 10)}...`
-                        : payload.value}
-                    </tspan>
-                  </text>
-                );
-              }}
-          />
-          <YAxis 
-            domain={[0, confidenceData.reduce((max, item) => Math.max(max, item.completelySure + item.fairlySure + item.slightlyUnsure + item.completelyUnsure), 0)]}
-            label={{ 
-              value: 'Respondents', 
-              angle: -90, 
-              position: 'insideLeft' 
-            }}
-          />
-          <Tooltip />
-          <Legend 
-              formatter={(value) => {
-                const textColors = {
-                  'Completely sure': colors.legendText,
-                  'Fairly sure': colors.legendText,
-                  'Slightly unsure': colors.legendText,
-                  'Completely unsure': colors.legendText
-                };
-                return <span style={{ color: textColors[value as keyof typeof textColors] }}>{value}</span>;
+    <div className="flex flex-col items-center w-full mt-[-50px]">
+      <div className="w-full flex justify-between items-center mb-0">
+        <div className="ml-auto">
+          <button
+            onClick={handleDownload}
+            className="p-2 bg-blue-600 text-white rounded-full hover:bg-blue-700 transition-colors"
+            title="Download Chart"
+          >
+            <ArrowDownTrayIcon className="h-5 w-5" />
+          </button>
+        </div>
+      </div>
+      <div className="p-6" style={{ width: '100%', height: 400 }} ref={chartRef}>
+        <ResponsiveContainer width="100%" height="100%">
+          <BarChart 
+            data={confidenceData} 
+            barGap={20}
+            stackOffset="sign"
+          >  
+            <XAxis 
+              dataKey="name" 
+              height={60}
+              interval={0}
+              tick={(props) => {
+                  const { x, y, payload } = props;
+                  return (
+                    <text x={x} y={y} dy={16} textAnchor="middle" fill="#666">
+                      <tspan x={x} textAnchor="middle">
+                        {payload.value.length > 20 
+                          ? `${payload.value.substring(0, 10)}...`
+                          : payload.value}
+                      </tspan>
+                    </text>
+                  );
+                }}
+            />
+            <YAxis 
+              domain={[0, confidenceData.reduce((max, item) => Math.max(max, item.completelySure + item.fairlySure + item.slightlyUnsure + item.completelyUnsure), 0)]}
+              label={{ 
+                value: 'Respondents', 
+                angle: -90, 
+                position: 'insideLeft' 
               }}
             />
-          <CartesianGrid stroke="#dadbdd" />
-          <ReferenceLine y={0} stroke="#000" />
-          <Bar dataKey="slightlyUnsure" name="Slightly unsure" fill={colors[ExitConfidenceNames.SlightlyUnsure]} stackId="stack" />
-          <Bar dataKey="completelyUnsure" name="Completely unsure" fill={colors[ExitConfidenceNames.CompletelyUnsure]} stackId="stack" />
-          <Bar dataKey="fairlySure" name="Fairly sure" fill={colors[ExitConfidenceNames.FairlySure]} stackId="stack" />
-          <Bar dataKey="completelySure" name="Completely sure" fill={colors[ExitConfidenceNames.CompletelySure]} stackId="stack" />
-        </BarChart>
-      </ResponsiveContainer>
+            <Tooltip />
+            <Legend 
+                formatter={(value) => {
+                  const textColors = {
+                    'Completely sure': colors.legendText,
+                    'Fairly sure': colors.legendText,
+                    'Slightly unsure': colors.legendText,
+                    'Completely unsure': colors.legendText
+                  };
+                  return <span style={{ color: textColors[value as keyof typeof textColors] }}>{value}</span>;
+                }}
+              />
+            <CartesianGrid stroke="#dadbdd" />
+            <ReferenceLine y={0} stroke="#000" />
+            <Bar dataKey="slightlyUnsure" name="Slightly unsure" fill={colors[ExitConfidenceNames.SlightlyUnsure]} stackId="stack" />
+            <Bar dataKey="completelyUnsure" name="Completely unsure" fill={colors[ExitConfidenceNames.CompletelyUnsure]} stackId="stack" />
+            <Bar dataKey="fairlySure" name="Fairly sure" fill={colors[ExitConfidenceNames.FairlySure]} stackId="stack" />
+            <Bar dataKey="completelySure" name="Completely sure" fill={colors[ExitConfidenceNames.CompletelySure]} stackId="stack" />
+          </BarChart>
+        </ResponsiveContainer>
+      </div>
     </div>
+
   );
 };
 
