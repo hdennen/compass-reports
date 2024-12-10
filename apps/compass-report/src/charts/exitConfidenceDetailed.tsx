@@ -3,7 +3,7 @@ import { ExitConfidenceNames, QuestionAreaNames } from '../enums';
 import { useState, useEffect, useRef } from 'react';
 import { useAssessmentStore } from '../store/assessmentStore';
 import { colors } from './colors';
-import { ArrowDownTrayIcon } from '@heroicons/react/24/outline';
+import { DownloadButton } from '../components/downloadButton';
 
 function calculateChartData(exitConfidenceData: { [key: string]: string[] }): any[] {
 
@@ -27,9 +27,10 @@ interface ExitConfidenceChartProps {
 
 
 export function ExitConfidenceDetailedChart({ areaName }: ExitConfidenceChartProps) {
-    const [confidenceData, setConfidenceData] = useState<any[]>([]);
-    const { getExitConfidenceByArea, transformedData } = useAssessmentStore();
-    const chartRef = useRef<HTMLDivElement>(null);
+  const [confidenceData, setConfidenceData] = useState<any[]>([]);
+  const { getExitConfidenceByArea, transformedData } = useAssessmentStore();
+  const chartRef = useRef<HTMLDivElement>(null);
+
   useEffect(() => {
     if (transformedData.length > 0) {
       const exitConfidenceData = getExitConfidenceByArea<{ [key: string]: string[] }>(areaName as QuestionAreaNames);
@@ -38,35 +39,11 @@ export function ExitConfidenceDetailedChart({ areaName }: ExitConfidenceChartPro
     }
   }, [transformedData]);
 
-  const handleDownload = () => {
-    if (chartRef.current) {
-      // Use html-to-image to capture the chart
-      import('html-to-image').then(({ toPng }) => {
-        toPng(chartRef.current!)
-          .then((dataUrl) => {
-            const link = document.createElement('a');
-            link.download = 'confidence-comparison.png';
-            link.href = dataUrl;
-            link.click();
-          })
-          .catch((err) => {
-            console.error('Error downloading chart:', err);
-          });
-      });
-    }
-  };
-
   return (
     <div className="flex flex-col items-center w-full mt-[-50px]">
       <div className="w-full flex justify-between items-center mb-0">
         <div className="ml-auto">
-          <button
-            onClick={handleDownload}
-            className="p-2 bg-blue-600 text-white rounded-full hover:bg-blue-700 transition-colors"
-            title="Download Chart"
-          >
-            <ArrowDownTrayIcon className="h-5 w-5" />
-          </button>
+          <DownloadButton chartRef={chartRef} />
         </div>
       </div>
       <div className="p-6" style={{ width: '100%', height: 400 }} ref={chartRef}>

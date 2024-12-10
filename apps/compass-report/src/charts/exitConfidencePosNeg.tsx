@@ -12,9 +12,9 @@ import {
 import { useAssessmentStore } from "../store/assessmentStore";
 import { ExitConfidenceNames } from "../enums";
 import { colors } from "./colors";
-import { ArrowDownTrayIcon } from "@heroicons/react/24/outline";
 import { useEffect, useRef, useState } from "react";
 import { getDisplayNameForExitConfidence } from "../utilities";
+import { DownloadButton } from "../components/downloadButton";
 
 export function ExitConfidencePosNegChart() {
   const { getExitConfidenceCounts, transformedData } = useAssessmentStore();
@@ -36,35 +36,11 @@ export function ExitConfidencePosNegChart() {
     setChartData(newChartData);
   }, [transformedData, getExitConfidenceCounts]);  
 
-  const handleDownload = () => {
-    if (chartRef.current) {
-      // Use html-to-image to capture the chart
-      import('html-to-image').then(({ toPng }) => {
-        toPng(chartRef.current!)
-          .then((dataUrl) => {
-            const link = document.createElement('a');
-            link.download = 'confidence-comparison.png';
-            link.href = dataUrl;
-            link.click();
-          })
-          .catch((err) => {
-            console.error('Error downloading chart:', err);
-          });
-      });
-    }
-  };
-
   return (
     <div className="bg-white rounded-lg shadow-lg p-6 flex flex-col items-center">
       <div className="w-full flex justify-between items-center mb-6">
         <h1 className="text-2xl font-bold text-gray-800">Exit Confidence Detail View</h1>
-        <button
-          onClick={handleDownload}
-          className="p-2 bg-blue-600 text-white rounded-full hover:bg-blue-700 transition-colors"
-          title="Download Chart"
-        >
-          <ArrowDownTrayIcon className="h-5 w-5" />
-        </button>
+        <DownloadButton chartRef={chartRef} />
       </div>
       <div ref={chartRef} style={{ width: '100%', height: 450 }}>
         <ResponsiveContainer width="100%" height="100%">

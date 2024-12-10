@@ -1,18 +1,16 @@
-import { Bar, Tooltip, Legend, CartesianGrid, YAxis, XAxis, ResponsiveContainer, BarChart, PieChart, Pie, Cell } from 'recharts';
+import { Tooltip, ResponsiveContainer, PieChart, Pie, Cell } from 'recharts';
 import { ExitConfidenceNames, QuestionAreaNames } from '../enums';
-import { useState } from 'react';
-import { useEffect } from 'react';
+import { useRef, useState, useEffect } from 'react';
 import { useAssessmentStore } from '../store/assessmentStore';
 import { colors } from './colors';
+import { DownloadButton } from '../components/downloadButton';
 
 const truncateName = (name: string, maxLength: number = 10) => {
   return name.length > maxLength ? `${name.substring(0, maxLength)}...` : name;
 };
 
 function calculateChartData(exitConfidenceData: { [key: string]: string[] }): any[] {
-
   return Object.entries(exitConfidenceData).map(([key, values]) => {
-
     const shortName = key.split(':')[0];
 
     return {
@@ -39,6 +37,7 @@ type PieDataItem = {
 export function ExitConfidenceDetailedPieChart({ areaName }: ExitConfidencePieChartProps) {
   const [confidenceData, setConfidenceData] = useState<any[]>([]);
   const { getExitConfidenceByArea, transformedData } = useAssessmentStore();
+  const chartRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     if (transformedData.length > 0) {
@@ -64,57 +63,64 @@ export function ExitConfidenceDetailedPieChart({ areaName }: ExitConfidencePieCh
   };
 
   return (
-    <div className="p-6" style={{ 
-      width: '100%', 
-      height: Math.ceil(confidenceData.length / 4) * 200 + 100 // 200px per row + padding
-    }}>
-      <ResponsiveContainer width="100%" height="100%">
-        <PieChart>
-          {confidenceData.map((entry, index) => {
-            const pieData: PieDataItem[] = [
-              { name: 'Completely Sure', value: entry.completelySure, color: colors['Completely sure'] },
-              { name: 'Fairly Sure', value: entry.fairlySure, color: colors['Fairly sure'] },
-              { name: 'Slightly Unsure', value: entry.slightlyUnsure, color: colors['Slightly unsure'] },
-              { name: 'Completely Unsure', value: entry.completelyUnsure, color: colors['Completely unsure'] },
-            ];
+    <div className="flex flex-col items-center w-full mt-[-30px]">
+      <div className="w-full flex justify-between items-center mb-0">
+        <div className="ml-auto">
+          <DownloadButton chartRef={chartRef} />
+        </div>
+      </div>
+      <div className="p-6" style={{ 
+        width: '100%', 
+        height: Math.ceil(confidenceData.length / 4) * 200 + 100 // 200px per row + padding
+      }} ref={chartRef}>
+        <ResponsiveContainer width="100%" height="100%">
+          <PieChart>
+            {confidenceData.map((entry, index) => {
+              const pieData: PieDataItem[] = [
+                { name: 'Completely Sure', value: entry.completelySure, color: colors['Completely sure'] },
+                { name: 'Fairly Sure', value: entry.fairlySure, color: colors['Fairly sure'] },
+                { name: 'Slightly Unsure', value: entry.slightlyUnsure, color: colors['Slightly unsure'] },
+                { name: 'Completely Unsure', value: entry.completelyUnsure, color: colors['Completely unsure'] },
+              ];
 
-            const pieRadius = 80;
-            const piesPerRow = 4;
-            const xOffset = (index % piesPerRow) * 200 + 110;
-            const yOffset = Math.floor(index / piesPerRow) * 200 + 100;
+              const pieRadius = 80;
+              const piesPerRow = 4;
+              const xOffset = (index % piesPerRow) * 200 + 110;
+              const yOffset = Math.floor(index / piesPerRow) * 200 + 100;
 
-            return (
-              <>
-                <text
-                  x={xOffset}
-                  y={yOffset - 90}
-                  textAnchor="middle"
-                  dominantBaseline="middle"              
-                >
-                  {truncateName(entry.name, 14)}
-                </text>
-                <Pie
-                  key={entry.name}
-                  data={pieData}
-                  cx={xOffset}
-                  cy={yOffset}
-                  labelLine={false}
-                  label={renderCustomizedLabel}
-                  outerRadius={pieRadius}
-                  fill="#8884d8"
-                  dataKey="value"
-                >
-                  {pieData.map((item, idx) => (
-                    <Cell key={`cell-${idx}`} fill={item.color} />
-                  ))}
-                </Pie>
-              </>
-            );
-          })}
-          <Tooltip />
-          {/* <Legend /> */}
-        </PieChart>
-      </ResponsiveContainer>
+              return (
+                <>
+                  <text
+                    x={xOffset}
+                    y={yOffset - 90}
+                    textAnchor="middle"
+                    dominantBaseline="middle"              
+                  >
+                    {truncateName(entry.name, 14)}
+                  </text>
+                  <Pie
+                    key={entry.name}
+                    data={pieData}
+                    cx={xOffset}
+                    cy={yOffset}
+                    labelLine={false}
+                    label={renderCustomizedLabel}
+                    outerRadius={pieRadius}
+                    fill="#8884d8"
+                    dataKey="value"
+                  >
+                    {pieData.map((item, idx) => (
+                      <Cell key={`cell-${idx}`} fill={item.color} />
+                    ))}
+                  </Pie>
+                </>
+              );
+            })}
+            <Tooltip />
+            {/* <Legend /> */}
+          </PieChart>
+        </ResponsiveContainer>
+      </div>
     </div>
   );
 }
