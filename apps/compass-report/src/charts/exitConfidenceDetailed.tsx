@@ -1,4 +1,4 @@
-import { Bar, Tooltip, Legend, CartesianGrid, YAxis, XAxis, ResponsiveContainer, BarChart } from 'recharts';
+import { Bar, Tooltip, Legend, CartesianGrid, YAxis, XAxis, ResponsiveContainer, BarChart, ReferenceLine } from 'recharts';
 import { ExitConfidenceNames, QuestionAreaNames } from '../enums';
 import { useState } from 'react';
 import { useEffect } from 'react';
@@ -15,8 +15,8 @@ function calculateChartData(exitConfidenceData: { [key: string]: string[] }): an
       name: shortName,
       completelySure: values.filter(val => val === ExitConfidenceNames.CompletelySure).length,
       fairlySure: values.filter(val => val === ExitConfidenceNames.FairlySure).length,
-      slightlyUnsure: values.filter(val => val === ExitConfidenceNames.SlightlyUnsure).length,
-      completelyUnsure: values.filter(val => val === ExitConfidenceNames.CompletelyUnsure).length,
+      slightlyUnsure: -values.filter(val => val === ExitConfidenceNames.SlightlyUnsure).length,
+      completelyUnsure: -values.filter(val => val === ExitConfidenceNames.CompletelyUnsure).length,
     };
   });
 }
@@ -42,7 +42,11 @@ export function ExitConfidenceDetailedChart({ areaName }: ExitConfidenceChartPro
   return (
     <div className="p-6" style={{ width: '100%', height: 400 }}>
       <ResponsiveContainer width="100%" height="100%">
-        <BarChart data={confidenceData} barGap={20}>  
+        <BarChart 
+          data={confidenceData} 
+          barGap={20}
+          stackOffset="sign"
+        >  
           <XAxis 
             dataKey="name" 
             height={60}
@@ -81,8 +85,9 @@ export function ExitConfidenceDetailedChart({ areaName }: ExitConfidenceChartPro
               }}
             />
           <CartesianGrid stroke="#dadbdd" />
-          <Bar dataKey="completelyUnsure" name="Completely unsure" fill={colors[ExitConfidenceNames.CompletelyUnsure]} stackId="stack" />
+          <ReferenceLine y={0} stroke="#000" />
           <Bar dataKey="slightlyUnsure" name="Slightly unsure" fill={colors[ExitConfidenceNames.SlightlyUnsure]} stackId="stack" />
+          <Bar dataKey="completelyUnsure" name="Completely unsure" fill={colors[ExitConfidenceNames.CompletelyUnsure]} stackId="stack" />
           <Bar dataKey="fairlySure" name="Fairly sure" fill={colors[ExitConfidenceNames.FairlySure]} stackId="stack" />
           <Bar dataKey="completelySure" name="Completely sure" fill={colors[ExitConfidenceNames.CompletelySure]} stackId="stack" />
         </BarChart>

@@ -100,7 +100,6 @@ export function SectionAnalysis({ sectionQuestions, sectionName, sectionKey }: S
         </p>
         <div className="flex flex-row">
           <ExitConfidenceDetailedChart areaName={sectionName as QuestionAreaNames} />
-          
         </div>
         <div className="flex flex-row">
           <ExitConfidenceDetailedPieChart areaName={sectionName as QuestionAreaNames} />
