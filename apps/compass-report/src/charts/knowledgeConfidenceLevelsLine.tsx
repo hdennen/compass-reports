@@ -64,27 +64,37 @@ export function KnowledgeConfidenceLevelsLineChart() {
         <h1 className="text-2xl font-bold text-gray-800">Reported Knowledge vs. Assessment Score</h1>
         <DownloadButton chartRef={chartRef} />
       </div>
-      <div style={{ width: '100%', height: 400 }} ref={chartRef}>
+      <div style={{ width: '100%', height: 450 }} ref={chartRef}>
         <ResponsiveContainer>
           <ComposedChart
             data={chartData}
             margin={{ top: 20, right: 30, left: 20, bottom: 5 }}
           >
             <CartesianGrid strokeDasharray="3 3" />
-            <XAxis 
-              dataKey="area" 
-              height={60}
+            <XAxis
+              dataKey="area"
+              height={80}
               interval={0}
               tick={(props) => {
                 const { x, y, payload } = props;
+                const words = payload.value.split(' ');
+                const lineHeight = 16;
+                
                 return (
-                  <text x={x} y={y} dy={16} textAnchor="middle" fill="#666">
-                    <tspan x={x} textAnchor="middle">
-                      {payload.value.length > 20 
-                        ? `${payload.value.substring(0, 12)}...`
-                        : payload.value}
-                    </tspan>
-                  </text>
+                  <g>
+                    {words.map((word: string, index: number) => (
+                      <text
+                        key={index}
+                        x={x}
+                        y={y + 12}
+                        dy={index * lineHeight}
+                        textAnchor="middle"
+                        fill="#666"
+                      >
+                        {word}
+                      </text>
+                    ))}
+                  </g>
                 );
               }}
             />
@@ -100,7 +110,7 @@ export function KnowledgeConfidenceLevelsLineChart() {
             <Legend 
               formatter={(value) => {
                 const textColors = {
-                  'Actual Knowledge': colors.legendText,
+                  'Assessment Score': colors.legendText,
                   'Very Limited': colors.legendText,
                   'Foundational': colors.legendText,
                   'Advanced': colors.legendText,
@@ -136,7 +146,7 @@ export function KnowledgeConfidenceLevelsLineChart() {
             />            
             <Line 
             dataKey="actualKnowledge" 
-            name="Actual Knowledge" 
+            name="Assessment Score" 
             fill={colors.actualKnowledgeBar} 
           />  
           </ComposedChart>

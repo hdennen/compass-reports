@@ -51,20 +51,30 @@ export function ExitConfidencePosNegChart() {
             stackOffset="sign"
           >
             <CartesianGrid strokeDasharray="3 3" />
-            <XAxis 
-              dataKey="area" 
-              height={60}
+            <XAxis
+              dataKey="area"
+              height={80}
               interval={0}
               tick={(props) => {
                 const { x, y, payload } = props;
+                const words = payload.value.split(' ');
+                const lineHeight = 16;
+                
                 return (
-                  <text x={x} y={y} dy={16} textAnchor="middle" fill="#666">
-                    <tspan x={x} textAnchor="middle">
-                      {payload.value.length > 20 
-                        ? `${payload.value.substring(0, 12)}...`
-                        : payload.value}
-                    </tspan>
-                  </text>
+                  <g>
+                    {words.map((word: string, index: number) => (
+                      <text
+                        key={index}
+                        x={x}
+                        y={y + 12}
+                        dy={index * lineHeight}
+                        textAnchor="middle"
+                        fill="#666"
+                      >
+                        {word}
+                      </text>
+                    ))}
+                  </g>
                 );
               }}
             />
