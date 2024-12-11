@@ -6,16 +6,5 @@
   "tags": [],
   "// targets": "to see all targets run: nx show project compass-report --web",
   "targets": {
-    "build": {
-      "options": {
-        "assets": [
-          {
-            "glob": "CHANGELOG.md",
-            "input": "apps/compass-report",
-            "output": "/"
-          }
-        ]
-      }
-    }
   }
 }
