@@ -8,12 +8,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [1.0.0] - 2024-12-11
 
 ### Added
-- Initial release
-- Feature A
-- Feature B
-
-### Changed
-- Something changed
-
-### Fixed
-- Something fixed 
+- Self-Reported Knowledge vs. Assessment Score with Line chart
+- Self-Reported Knowledge vs. Assessment Score with Bar chart
+- Self-Reported Knowledge vs. Assessment Score with Line over Stacked Bar chart
+- Exit Confidence Detail View (total count) chart
+- Self-Reported Knowledge vs Assessment Score vs Exit Confidence (AVG) chart
+- Exit Confidence by Area stacked bar charts
+- Exit Confidence by Area pie charts
+- Cohort Config dropdown
+- Cohort CSV import
+- Responses CSV import
+- Threshold slider
