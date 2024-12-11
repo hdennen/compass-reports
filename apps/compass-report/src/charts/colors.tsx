@@ -11,8 +11,8 @@ export const colors = {
   [ExitConfidenceNames.FairlySure]: '#82CA9D',
   [ExitConfidenceNames.CompletelySure]: '#3DAE67',
   legendText: '#000',
-  veryLimited: 'rgb(236, 236, 243)',
-  foundational: 'rgb(204, 216, 232)',
-  advanced: 'rgb(173, 196, 222)',
-  expert: 'rgb(141, 177, 211)'
+  veryLimited: '#91E9FF',
+  foundational: '#00B7E5',
+  advanced:     '#2D78C0',
+  expert:     '#16416B'
 }
