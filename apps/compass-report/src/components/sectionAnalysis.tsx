@@ -95,7 +95,7 @@ export function SectionAnalysis({ sectionName, sectionKey }: SectionAnalysisProp
       <div className="section-analysis p-4 mx-auto">
         <h2 className="text-2xl font-bold mb-4">{sectionName}</h2>
         <p className="text-lg mb-2">
-          <strong>Confidence (pre):</strong> {confidenceScore.toFixed(2)}%
+          <strong>Self-Reported Knowledge:</strong> {confidenceScore.toFixed(2)}%
         </p>
         <p className="text-lg mb-4">
           <strong>Overall Correct:</strong> {overallCorrect.toFixed(2)}%

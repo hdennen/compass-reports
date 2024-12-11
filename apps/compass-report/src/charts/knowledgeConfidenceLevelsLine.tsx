@@ -234,19 +234,39 @@ export function KnowledgeConfidenceLevelsLineChart() {
                   if (!value || Number(value) <= 0) return null;
                   
                   return (
-                    <text
-                      x={x + 5}
-                      y={y + 15}
-                      textAnchor="start"
-                      fill="#ffffff"
-                      style={{ 
-                        filter: 'drop-shadow(0px 0px 1px rgba(0,0,0,0.5))',
-                        fontWeight: 500,
-                        fontSize: '10px'
-                      }}
-                    >
-                      {`${value}%`}
-                    </text>
+                    <g>
+                      <rect
+                        x={x + (width / 2) - 20}
+                        y={y - 15}
+                        width={40}
+                        height={20}
+                        fill={colors.expert}
+                        rx={3}
+                        filter="url(#expertLabelShadow)"
+                      />
+                      <defs>
+                        <filter id="expertLabelShadow" x="-20%" y="-20%" width="140%" height="140%">
+                          <feDropShadow 
+                            dx="0" 
+                            dy="1" 
+                            stdDeviation="1"
+                            floodOpacity="0.2"
+                          />
+                        </filter>
+                      </defs>
+                      <text
+                        x={x + (width / 2)}
+                        y={y - 2}
+                        textAnchor="middle"
+                        fill="#ffffff"
+                        style={{ 
+                          fontWeight: 500,
+                          fontSize: '10px'
+                        }}
+                      >
+                        {`${value}%`}
+                      </text>
+                    </g>
                   );
                 }}
               />
@@ -273,7 +293,7 @@ export function KnowledgeConfidenceLevelsLineChart() {
                     <g>
                       <rect
                         x={Number(x) - 20 + 35}
-                        y={Number(y) - 15}
+                        y={Number(y) - 12}
                         width={40}
                         height={20}
                         fill="white"
@@ -294,7 +314,7 @@ export function KnowledgeConfidenceLevelsLineChart() {
                       </defs>
                       <text
                         x={x + 35}
-                        y={y - 1}
+                        y={y + 2}
                         textAnchor="middle"
                         fill="#000000"
                         fontSize={10}

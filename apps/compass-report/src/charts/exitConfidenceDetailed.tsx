@@ -1,4 +1,4 @@
-import { Bar, Tooltip, Legend, CartesianGrid, YAxis, XAxis, ResponsiveContainer, BarChart, ReferenceLine } from 'recharts';
+import { Bar, Tooltip, Legend, CartesianGrid, YAxis, XAxis, ResponsiveContainer, BarChart, ReferenceLine, LabelList } from 'recharts';
 import { ExitConfidenceNames, QuestionAreaNames } from '../enums';
 import { useState, useEffect, useRef } from 'react';
 import { useAssessmentStore } from '../store/assessmentStore';
@@ -115,28 +115,56 @@ export function ExitConfidenceDetailedChart({ areaName }: ExitConfidenceChartPro
               fill={colors[ExitConfidenceNames.SlightlyUnsure]} 
               stackId="stack"
               barSize={80}
-            />
+            >
+              <LabelList 
+                dataKey="slightlyUnsure" 
+                position="center" 
+                fill="#fff" 
+                formatter={(value: number) => value > 0 ? value : ''} 
+              />
+            </Bar>
             <Bar 
               dataKey="completelyUnsure" 
               name="Completely unsure" 
               fill={colors[ExitConfidenceNames.CompletelyUnsure]} 
               stackId="stack"
               barSize={80}
-            />
+            >
+              <LabelList 
+                dataKey="completelyUnsure" 
+                position="center" 
+                fill="#fff" 
+                formatter={(value: number) => value > 0 ? value : ''} 
+              />
+            </Bar>
             <Bar 
               dataKey="fairlySure" 
               name="Fairly sure" 
               fill={colors[ExitConfidenceNames.FairlySure]} 
               stackId="stack"
               barSize={80}
-            />
+            >
+              <LabelList 
+                dataKey="fairlySure" 
+                position="center" 
+                fill="#fff" 
+                formatter={(value: number) => value > 0 ? value : ''} 
+              />
+            </Bar>
             <Bar 
               dataKey="completelySure" 
               name="Completely sure" 
               fill={colors[ExitConfidenceNames.CompletelySure]} 
               stackId="stack"
               barSize={80}
-            />
+            >
+              <LabelList 
+                dataKey="completelySure" 
+                position="center" 
+                fill="#fff" 
+                formatter={(value: number) => value > 0 ? value : ''} 
+              />
+            </Bar>
           </BarChart>
         </ResponsiveContainer>
       </div>
