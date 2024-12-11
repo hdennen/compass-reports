@@ -15,6 +15,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Self-Reported Knowledge vs Assessment Score vs Exit Confidence (AVG) chart
 - Exit Confidence by Area stacked bar charts
 - Exit Confidence by Area pie charts
+- Download chart buttons
 - Cohort Config dropdown
 - Cohort CSV import
 - Responses CSV import
