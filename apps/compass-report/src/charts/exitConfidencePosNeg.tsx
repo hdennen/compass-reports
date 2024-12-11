@@ -8,6 +8,7 @@ import {
   Legend,
   ResponsiveContainer,
   ReferenceLine,
+  LabelList,
 } from "recharts";
 import { useAssessmentStore } from "../store/assessmentStore";
 import { ExitConfidenceNames } from "../enums";
@@ -39,7 +40,7 @@ export function ExitConfidencePosNegChart() {
   return (
     <div className="bg-white rounded-lg shadow-lg p-6 flex flex-col items-center">
       <div className="w-full flex justify-between items-center mb-6">
-        <h1 className="text-2xl font-bold text-gray-800">Exit Confidence Detail View</h1>
+        <h1 className="text-2xl font-bold text-gray-800">Exit Confidence Detail View (total count)</h1>
         <DownloadButton chartRef={chartRef} />
       </div>
       <div ref={chartRef} style={{ width: '100%', height: 450 }}>
@@ -78,7 +79,14 @@ export function ExitConfidencePosNegChart() {
                 );
               }}
             />
-            <YAxis />
+            <YAxis 
+              label={{ 
+                value: 'Response Count', 
+                angle: -90, 
+                position: 'insideLeft',
+                style: { textAnchor: 'middle' }
+              }} 
+            />
             <Tooltip />
             <Legend 
               formatter={(value) => {
@@ -92,10 +100,38 @@ export function ExitConfidencePosNegChart() {
               }}
             />
             <ReferenceLine y={0} stroke="#000" />
-            <Bar dataKey="slightlyUnsure" name="Slightly unsure" fill={colors[ExitConfidenceNames.SlightlyUnsure]} stackId="stack" />
-            <Bar dataKey="completelyUnsure" name="Completely unsure" fill={colors[ExitConfidenceNames.CompletelyUnsure]} stackId="stack" />
-            <Bar dataKey="fairlySure" name="Fairly sure" fill={colors[ExitConfidenceNames.FairlySure]} stackId="stack" />
-            <Bar dataKey="completelySure" name="Completely sure" fill={colors[ExitConfidenceNames.CompletelySure]} stackId="stack" />
+            <Bar dataKey="slightlyUnsure" name="Slightly unsure" fill={colors[ExitConfidenceNames.SlightlyUnsure]} stackId="stack">
+              <LabelList 
+                dataKey="slightlyUnsure" 
+                position="center" 
+                formatter={(value: number) => value < 0 ? Math.abs(value) : ''} 
+                style={{ fill: 'white', fontWeight: 'bold', fontSize: '10px' }}
+              />
+            </Bar>
+            <Bar dataKey="completelyUnsure" name="Completely unsure" fill={colors[ExitConfidenceNames.CompletelyUnsure]} stackId="stack">
+              <LabelList 
+                dataKey="completelyUnsure" 
+                position="center" 
+                formatter={(value: number) => value < 0 ? Math.abs(value) : ''} 
+                style={{ fill: 'white', fontWeight: 'bold', fontSize: '10px' }}
+              />
+            </Bar>
+            <Bar dataKey="fairlySure" name="Fairly sure" fill={colors[ExitConfidenceNames.FairlySure]} stackId="stack">
+              <LabelList 
+                dataKey="fairlySure" 
+                position="center" 
+                formatter={(value: number) => value > 0 ? value : ''} 
+                style={{ fill: 'white', fontWeight: 'bold', fontSize: '10px' }}
+              />
+            </Bar>
+            <Bar dataKey="completelySure" name="Completely sure" fill={colors[ExitConfidenceNames.CompletelySure]} stackId="stack">
+              <LabelList 
+                dataKey="completelySure" 
+                position="center" 
+                formatter={(value: number) => value > 0 ? value : ''} 
+                style={{ fill: 'white', fontWeight: 'bold', fontSize: '10px' }}
+              />
+            </Bar>
           </BarChart>
         </ResponsiveContainer>
       </div>

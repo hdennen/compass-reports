@@ -6,7 +6,8 @@ import {
   CartesianGrid, 
   Tooltip, 
   Legend,
-  ResponsiveContainer 
+  ResponsiveContainer,
+  LabelList
 } from 'recharts';
 import { useAssessmentStore } from '../store/assessmentStore';
 import { EntryConfidenceNames, QuestionAreaKeys } from '../enums';
@@ -59,7 +60,7 @@ export function KnowledgeConfidenceLevelsChart() {
   return (
     <div className="bg-white rounded-lg shadow-lg p-6 flex flex-col items-center">
       <div className="w-full flex justify-between items-center mb-6">
-        <h1 className="text-2xl font-bold text-gray-800">Reported Knowledge vs. Assessment Score</h1>
+        <h1 className="text-2xl font-bold text-gray-800">Self-Reported Knowledge vs. Assessment Score</h1>
         <DownloadButton chartRef={chartRef} />
       </div>
       <div style={{ width: '100%', height: 450 }} ref={chartRef}>
@@ -99,7 +100,7 @@ export function KnowledgeConfidenceLevelsChart() {
             <YAxis 
               domain={[0, 100]}
               label={{ 
-                value: 'Confidence Level (%)', 
+                value: '(%)', 
                 angle: -90, 
                 position: 'insideLeft' 
               }}
@@ -121,31 +122,71 @@ export function KnowledgeConfidenceLevelsChart() {
               dataKey="actualKnowledge" 
               name="Assessment Score" 
               fill={colors.actualKnowledgeBar} 
-            />  
+            >
+              <LabelList 
+                dataKey="actualKnowledge" 
+                fill="#000" 
+                fontSize={10}
+                formatter={(value) => parseFloat(value) > 0 ? `${value}%` : ''} 
+                style={{ fontWeight: 'bold' }}
+              />
+            </Bar>  
             <Bar 
               dataKey="veryLimited" 
               name="Very Limited" 
               fill={colors.veryLimited} 
               stackId="stack"
-            />
+            >
+              <LabelList 
+                dataKey="veryLimited" 
+                fill="#fff" 
+                fontSize={10}
+                formatter={(value) => parseFloat(value) > 0 ? `${value}%` : ''} 
+                style={{ fontWeight: 'bold' }}
+              />
+            </Bar>
             <Bar 
               dataKey="foundational" 
               name="Foundational" 
               fill={colors.foundational} 
               stackId="stack"
-            />
+            >
+              <LabelList 
+                dataKey="foundational" 
+                fill="#fff" 
+                fontSize={10}
+                formatter={(value) => parseFloat(value) > 0 ? `${value}%` : ''} 
+                style={{ fontWeight: 'bold' }}
+              />
+            </Bar>
             <Bar 
               dataKey="advanced" 
               name="Advanced" 
               fill={colors.advanced} 
               stackId="stack"
-            />
+            >
+              <LabelList 
+                dataKey="advanced" 
+                fill="#ffffff" 
+                fontSize={10}
+                formatter={(value: string) => parseFloat(value) > 0 ? `${value}%` : ''} 
+                style={{ fontWeight: 'bold' }}
+              />
+            </Bar>
             <Bar 
               dataKey="expert" 
               name="Expert" 
               fill={colors.expert} 
               stackId="stack"
-            />
+            >
+              <LabelList 
+                dataKey="expert" 
+                fill="#ffffff" 
+                fontSize={10}
+                formatter={(value: string) => parseFloat(value) > 0 ? `${value}%` : ''} 
+                style={{ fontWeight: 'bold' }}
+              />
+            </Bar>
           </BarChart>
         </ResponsiveContainer>
       </div>

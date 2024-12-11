@@ -1,18 +1,18 @@
 import { ExitConfidenceNames } from "../enums";
 
 export const colors = {
-  actualKnowledgeBar: '#ffe5a9',
+  actualKnowledgeBar: '#D4AF37',
   actualKnowledgeAreaFill: 'rgba(255,205,86,.5)',
   actualKnowledgeAreaStroke: '#ffe5a9',
   exitConfidenceBar: '#82ca9d',
-  confidenceBar: '#8db1d3',
+  confidenceBar: '#2D78C0',
   [ExitConfidenceNames.CompletelyUnsure]: '#AE3D3D',
   [ExitConfidenceNames.SlightlyUnsure]: '#E3ABAB',
   [ExitConfidenceNames.FairlySure]: '#82CA9D',
   [ExitConfidenceNames.CompletelySure]: '#3DAE67',
   legendText: '#000',
-  veryLimited: 'rgb(236, 236, 243)',
-  foundational: 'rgb(204, 216, 232)',
-  advanced: 'rgb(173, 196, 222)',
-  expert: 'rgb(141, 177, 211)'
+  veryLimited: '#545962',
+  foundational: '#3473C1',
+  advanced:     '#59A431',
+  expert:     '#417A28'
 }
