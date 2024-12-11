@@ -53,22 +53,40 @@ export function ExitConfidenceDetailedChart({ areaName }: ExitConfidenceChartPro
             barGap={20}
             stackOffset="sign"
           >  
-            <XAxis 
-              dataKey="name" 
-              height={60}
+          <XAxis
+              dataKey="name"
+              height={80}
               interval={0}
               tick={(props) => {
-                  const { x, y, payload } = props;
-                  return (
-                    <text x={x} y={y} dy={16} textAnchor="middle" fill="#666">
-                      <tspan x={x} textAnchor="middle">
-                        {payload.value.length > 20 
-                          ? `${payload.value.substring(0, 10)}...`
-                          : payload.value}
-                      </tspan>
-                    </text>
-                  );
-                }}
+                const { x, y, payload } = props;
+                const words = payload.value.split(' ').reduce((acc, word) => {
+                  const lastGroup = acc[acc.length - 1];
+                  if (!lastGroup || (lastGroup.join(' ').length + word.length + 1 > 20)) {
+                    acc.push([word + ' ']);
+                  } else {
+                    lastGroup.push(word);
+                  }
+                  return acc;
+                }, [] as string[][]);
+                const lineHeight = 16;
+                
+                return (
+                  <g>
+                    {words.map((word: string, index: number) => (
+                      <text
+                        key={index}
+                        x={x}
+                        y={y + 12}
+                        dy={index * lineHeight}
+                        textAnchor="middle"
+                        fill="#666"
+                      >
+                        {word}
+                      </text>
+                    ))}
+                  </g>
+                );
+              }}
             />
             <YAxis 
               domain={[0, confidenceData.reduce((max, item) => Math.max(max, item.completelySure + item.fairlySure + item.slightlyUnsure + item.completelyUnsure), 0)]}

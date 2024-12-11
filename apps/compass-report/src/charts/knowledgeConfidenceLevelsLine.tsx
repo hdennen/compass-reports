@@ -6,7 +6,9 @@ import {
   CartesianGrid, 
   Tooltip, 
   Legend,
-  ResponsiveContainer 
+  ResponsiveContainer,
+  ComposedChart,
+  Line
 } from 'recharts';
 import { useAssessmentStore } from '../store/assessmentStore';
 import { EntryConfidenceNames, QuestionAreaKeys } from '../enums';
@@ -22,7 +24,7 @@ interface ChartData {
   exitConfidence: number;
 }
 
-export function KnowledgeConfidenceLevelsChart() {
+export function KnowledgeConfidenceLevelsLineChart() {
   const { getConfidenceData, getExitConfidenceByArea, transformedData } = useAssessmentStore();
   const responseStore = useResponseStore();
   const [chartData, setChartData] = useState<ChartData[]>([]);
@@ -64,7 +66,7 @@ export function KnowledgeConfidenceLevelsChart() {
       </div>
       <div style={{ width: '100%', height: 450 }} ref={chartRef}>
         <ResponsiveContainer>
-          <BarChart
+          <ComposedChart
             data={chartData}
             margin={{ top: 20, right: 30, left: 20, bottom: 5 }}
           >
@@ -117,11 +119,7 @@ export function KnowledgeConfidenceLevelsChart() {
                 return <span style={{ color: textColors[value as keyof typeof textColors] }}>{value}</span>;
               }}
             />
-            <Bar 
-              dataKey="actualKnowledge" 
-              name="Assessment Score" 
-              fill={colors.actualKnowledgeBar} 
-            />  
+
             <Bar 
               dataKey="veryLimited" 
               name="Very Limited" 
@@ -145,8 +143,13 @@ export function KnowledgeConfidenceLevelsChart() {
               name="Expert" 
               fill={colors.expert} 
               stackId="stack"
-            />
-          </BarChart>
+            />            
+            <Line 
+            dataKey="actualKnowledge" 
+            name="Assessment Score" 
+            fill={colors.actualKnowledgeBar} 
+          />  
+          </ComposedChart>
         </ResponsiveContainer>
       </div>
     </div>

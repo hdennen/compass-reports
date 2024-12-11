@@ -96,7 +96,7 @@ export function ExitConfidenceDetailedPieChart({ areaName }: ExitConfidencePieCh
                     textAnchor="middle"
                     dominantBaseline="middle"              
                   >
-                    {truncateName(entry.name, 14)}
+                    {entry.name}
                   </text>
                   <Pie
                     key={entry.name}

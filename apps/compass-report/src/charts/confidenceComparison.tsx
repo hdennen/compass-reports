@@ -58,30 +58,40 @@ export function ConfidenceComparison() {
       <h1 className="text-2xl font-bold text-gray-800">Entry Confidence vs Knowledge vs Exit Confidence (AVG)</h1>
       <DownloadButton chartRef={chartRef} />
       </div>
-      <div style={{ width: '100%', height: 400 }} ref={chartRef}>
+      <div style={{ width: '100%', height: 450 }} ref={chartRef}>
         <ResponsiveContainer>
         <BarChart
           data={chartData}
           margin={{ top: 20, right: 30, left: 20, bottom: 5 }}
         >
           <CartesianGrid strokeDasharray="3 3" />
-          <XAxis 
-            dataKey="area" 
-            height={60}
-            interval={0}
-            tick={(props) => {
-              const { x, y, payload } = props;
-              return (
-                <text x={x} y={y} dy={16} textAnchor="middle" fill="#666">
-                  <tspan x={x} textAnchor="middle">
-                    {payload.value.length > 20 
-                      ? `${payload.value.substring(0, 12)}...`
-                      : payload.value}
-                  </tspan>
-                </text>
-              );
-            }}
-          />
+          <XAxis
+              dataKey="area"
+              height={80}
+              interval={0}
+              tick={(props) => {
+                const { x, y, payload } = props;
+                const words = payload.value.split(' ');
+                const lineHeight = 16;
+                
+                return (
+                  <g>
+                    {words.map((word: string, index: number) => (
+                      <text
+                        key={index}
+                        x={x}
+                        y={y + 12}
+                        dy={index * lineHeight}
+                        textAnchor="middle"
+                        fill="#666"
+                      >
+                        {word}
+                      </text>
+                    ))}
+                  </g>
+                );
+              }}
+            />
           <YAxis 
             domain={[0, 100]}
             label={{ 
@@ -95,7 +105,7 @@ export function ConfidenceComparison() {
             formatter={(value) => {
               const textColors = {
                 'Initial Confidence': colors.legendText,
-                'Actual Knowledge': colors.legendText,
+                'Assessment Score': colors.legendText,
                 'Exit Confidence': colors.legendText
               };
               return <span style={{ color: textColors[value as keyof typeof textColors] }}>{value}</span>;
@@ -108,7 +118,7 @@ export function ConfidenceComparison() {
           />
           <Bar 
             dataKey="actualKnowledge" 
-            name="Actual Knowledge" 
+            name="Assessment Score" 
             fill={colors.actualKnowledgeBar} 
           />
           <Bar 

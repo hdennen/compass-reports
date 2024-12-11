@@ -56,20 +56,30 @@ export function ConfidenceChart() {
           <ComposedChart data={chartData} barGap={20}>
             <XAxis
               dataKey="name"
-            height={60}
-            interval={0}
-            tick={(props) => {
-              const { x, y, payload } = props;
-              return (
-                <text x={x} y={y} dy={16} textAnchor="middle" fill="#666">
-                  <tspan x={x} textAnchor="middle">
-                    {payload.value.length > 20 
-                      ? `${payload.value.substring(0, 12)}...`
-                      : payload.value}
-                  </tspan>
-                </text>
-              );
-            }}
+              height={80}
+              interval={0}
+              tick={(props) => {
+                const { x, y, payload } = props;
+                const words = payload.value.split(' ');
+                const lineHeight = 16;
+                
+                return (
+                  <g>
+                    {words.map((word: string, index: number) => (
+                      <text
+                        key={index}
+                        x={x}
+                        y={y + 12}
+                        dy={index * lineHeight}
+                        textAnchor="middle"
+                        fill="#666"
+                      >
+                        {word}
+                      </text>
+                    ))}
+                  </g>
+                );
+              }}
             />
             <YAxis 
               yAxisId="left"
@@ -96,14 +106,14 @@ export function ConfidenceChart() {
             <Legend 
               formatter={(value) => {
                 const textColors = {
-                  'Actual': colors.legendText,
+                  'Assessment Score': colors.legendText,
                   'Confidence': colors.legendText
                 };
                 return <span style={{ color: textColors[value as keyof typeof textColors] }}>{value}</span>;
               }}
               payload={[
                 {
-                  value: 'Actual',
+                  value: 'Assessment Score',
                   type: 'line',
                   color: colors.actualKnowledgeAreaStroke,  // This controls the icon color
                 },
@@ -121,7 +131,7 @@ export function ConfidenceChart() {
               type="monotone" 
               dataKey="actualAverage" 
               yAxisId="left"
-              name="Actual" 
+              name="Assessment Score" 
               dot={areaDot} 
               fill={colors.actualKnowledgeAreaFill} 
               stroke={colors.actualKnowledgeAreaStroke} 
