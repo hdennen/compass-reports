@@ -100,7 +100,7 @@ export function KnowledgeConfidenceLevelsChart() {
             <YAxis 
               domain={[0, 100]}
               label={{ 
-                value: 'Confidence Level (%)', 
+                value: '(%)', 
                 angle: -90, 
                 position: 'insideLeft' 
               }}
@@ -125,9 +125,10 @@ export function KnowledgeConfidenceLevelsChart() {
             >
               <LabelList 
                 dataKey="actualKnowledge" 
-                fill="#3d3d3d" 
+                fill="#000" 
                 fontSize={10}
-                formatter={(value) => parseFloat(value) > 0 ? value : ''} 
+                formatter={(value) => parseFloat(value) > 0 ? `${value}%` : ''} 
+                style={{ fontWeight: 'bold' }}
               />
             </Bar>  
             <Bar 
@@ -138,9 +139,10 @@ export function KnowledgeConfidenceLevelsChart() {
             >
               <LabelList 
                 dataKey="veryLimited" 
-                fill="#3d3d3d" 
+                fill="#fff" 
                 fontSize={10}
-                formatter={(value) => parseFloat(value) > 0 ? value : ''} 
+                formatter={(value) => parseFloat(value) > 0 ? `${value}%` : ''} 
+                style={{ fontWeight: 'bold' }}
               />
             </Bar>
             <Bar 
@@ -151,9 +153,10 @@ export function KnowledgeConfidenceLevelsChart() {
             >
               <LabelList 
                 dataKey="foundational" 
-                fill="#3d3d3d" 
+                fill="#fff" 
                 fontSize={10}
-                formatter={(value) => parseFloat(value) > 0 ? value : ''} 
+                formatter={(value) => parseFloat(value) > 0 ? `${value}%` : ''} 
+                style={{ fontWeight: 'bold' }}
               />
             </Bar>
             <Bar 
@@ -166,7 +169,8 @@ export function KnowledgeConfidenceLevelsChart() {
                 dataKey="advanced" 
                 fill="#ffffff" 
                 fontSize={10}
-                formatter={(value: string) => parseFloat(value) > 0 ? value : ''} 
+                formatter={(value: string) => parseFloat(value) > 0 ? `${value}%` : ''} 
+                style={{ fontWeight: 'bold' }}
               />
             </Bar>
             <Bar 
@@ -179,7 +183,8 @@ export function KnowledgeConfidenceLevelsChart() {
                 dataKey="expert" 
                 fill="#ffffff" 
                 fontSize={10}
-                formatter={(value: string) => parseFloat(value) > 0 ? value : ''} 
+                formatter={(value: string) => parseFloat(value) > 0 ? `${value}%` : ''} 
+                style={{ fontWeight: 'bold' }}
               />
             </Bar>
           </BarChart>

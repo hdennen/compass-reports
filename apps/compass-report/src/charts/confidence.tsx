@@ -1,4 +1,4 @@
-import { ComposedChart, XAxis, YAxis, Tooltip, Legend, CartesianGrid, Area, Bar, ResponsiveContainer, LabelList } from 'recharts';
+import { ComposedChart, XAxis, YAxis, Tooltip, Legend, CartesianGrid, Line, Bar, ResponsiveContainer, LabelList } from 'recharts';
 import { useEffect, useState, useRef } from 'react';
 import { ConfidenceLevel } from '../enums';
 import { useAssessmentStore } from '../store/assessmentStore';
@@ -135,14 +135,14 @@ export function ConfidenceChart() {
             <CartesianGrid 
               stroke="#dadbdd" 
             />
-            <Area 
+            <Line 
               type="monotone" 
               dataKey="actualAverage" 
               yAxisId="left"
               name="Assessment Score" 
               dot={areaDot} 
-              fill={colors.actualKnowledgeAreaFill} 
-              stroke={colors.actualKnowledgeAreaStroke} 
+              stroke={colors.actualKnowledgeAreaStroke}
+              strokeWidth={3}
             >
               <LabelList 
                 dataKey="actualAverage"
@@ -155,12 +155,12 @@ export function ConfidenceChart() {
                   fontWeight: 600
                 }}
               />
-            </Area>
+            </Line>
             <Bar 
               dataKey="averageConfidence"
               yAxisId="right"
               name="Self-Reported Knowledge" 
-              barSize={40} 
+              barSize={60}
               fill={colors.confidenceBar}
             >
               <LabelList 
@@ -168,7 +168,8 @@ export function ConfidenceChart() {
                 position="middle"
                 fontWeight={600}
                 fontSize={10}
-                fill="#3d3d3d"
+                fill="white"
+                formatter={(value: string) => `${value}%`}
               />  
             </Bar>
           </ComposedChart>

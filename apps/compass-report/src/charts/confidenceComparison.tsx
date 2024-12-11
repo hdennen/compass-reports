@@ -6,7 +6,10 @@ import {
   CartesianGrid, 
   Tooltip, 
   Legend,
-  ResponsiveContainer 
+  LineChart,
+  Line,
+  ResponsiveContainer,
+  LabelList
 } from 'recharts';
 import { useAssessmentStore } from '../store/assessmentStore';
 import { ConfidenceLevel, QuestionAreaKeys, QuestionAreaNames } from '../enums';
@@ -20,6 +23,7 @@ interface ChartData {
   area: string;
   confidence: number;
   exitConfidence: number;
+  actualKnowledge: number;
 }
 
 export function ConfidenceComparison() {
@@ -29,33 +33,35 @@ export function ConfidenceComparison() {
   const chartRef = useRef<HTMLDivElement>(null);
   useEffect(() => {
     const confidenceData = getConfidenceData();    
-    const newChartData = Object.entries(confidenceData).map(([questionText, values]) => {
-      const areaName = Object.keys(QuestionAreaKeys).find(key => QuestionAreaKeys[key as keyof typeof QuestionAreaKeys] === questionText);
-      if (!areaName) {
-        console.warn('No area name found for ' + questionText);
-        return;
-      }
+    const newChartData = Object.entries(confidenceData)
+      .map(([questionText, values]) => {
+        const areaName = Object.keys(QuestionAreaKeys).find(key => QuestionAreaKeys[key as keyof typeof QuestionAreaKeys] === questionText);
+        if (!areaName) {
+          console.warn('No area name found for ' + questionText);
+          return null;
+        }
 
-      const averageExitConfidence = getExitConfidenceByArea<number>(areaName as QuestionAreaNames, 2);
-      const averageConfidence = values.reduce((sum, val) => sum + (ConfidenceLevel[val as keyof typeof ConfidenceLevel]), 0) / values.length;
+        const averageExitConfidence = getExitConfidenceByArea<number>(areaName as QuestionAreaNames, 2);
+        const averageConfidence = values.reduce((sum, val) => sum + (ConfidenceLevel[val as keyof typeof ConfidenceLevel]), 0) / values.length;
 
-      const displayName = getDisplayName(questionText);
-      const actualKnowledge = responseStore.getActualKnowledge()[questionText];
+        const displayName = getDisplayName(questionText);
+        const actualKnowledge = responseStore.getActualKnowledge()[questionText];
 
-      return {     
-        area: displayName,
-        confidence: averageConfidence.toFixed(2),
-        exitConfidence: averageExitConfidence.toFixed(2),
-        actualKnowledge: actualKnowledge.toFixed(2)
-      }
-    });
+        return {     
+          area: displayName,
+          confidence: Number(averageConfidence.toFixed(2)),
+          exitConfidence: Number(averageExitConfidence.toFixed(2)),
+          actualKnowledge: Number(actualKnowledge.toFixed(2))
+        }
+      })
+      .filter((item): item is ChartData => item !== null);
     setChartData(newChartData);
   }, [transformedData, getConfidenceData, responseStore.transformedData]);
 
   return (
     <div className="bg-white rounded-lg shadow-lg p-6 flex flex-col items-center">
     <div className="w-full flex justify-between items-center mb-6">
-      <h1 className="text-2xl font-bold text-gray-800">Entry Confidence vs Knowledge vs Exit Confidence (AVG)</h1>
+      <h1 className="text-2xl font-bold text-gray-800">Self-Reported Knowledge vs Assessment Score vs Exit Confidence (AVG)</h1>
       <DownloadButton chartRef={chartRef} />
       </div>
       <div style={{ width: '100%', height: 450 }} ref={chartRef}>
@@ -95,7 +101,7 @@ export function ConfidenceComparison() {
           <YAxis 
             domain={[0, 100]}
             label={{ 
-              value: 'Confidence Level (%)', 
+              value: '(%)', 
               angle: -90, 
               position: 'insideLeft' 
             }}
@@ -104,7 +110,7 @@ export function ConfidenceComparison() {
           <Legend 
             formatter={(value) => {
               const textColors = {
-                'Initial Confidence': colors.legendText,
+                'Self-Reported Knowledge': colors.legendText,
                 'Assessment Score': colors.legendText,
                 'Exit Confidence': colors.legendText
               };
@@ -113,19 +119,52 @@ export function ConfidenceComparison() {
           />
           <Bar 
             dataKey="confidence" 
-            name="Initial Confidence" 
+            name="Self-Reported Knowledge" 
             fill={colors.confidenceBar} 
-          />
+          >
+            <LabelList 
+              dataKey="confidence" 
+              position="center"
+              style={{ 
+                fill: 'white',
+                fontWeight: 'bold',
+                fontSize: '10px'
+              }}
+              formatter={(value: number) => (value > 0 ? `${value}%` : '')}
+            />
+          </Bar>
           <Bar 
             dataKey="actualKnowledge" 
             name="Assessment Score" 
             fill={colors.actualKnowledgeBar} 
-          />
+          >
+            <LabelList 
+              dataKey="actualKnowledge" 
+              position="center"
+              style={{ 
+                fill: 'white',
+                fontWeight: 'bold',
+                fontSize: '10px'
+              }}
+              formatter={(value: number) => (value > 0 ? `${value}%` : '')}
+            />
+          </Bar>
           <Bar 
             dataKey="exitConfidence" 
             name="Exit Confidence" 
             fill={colors.exitConfidenceBar} 
-          />
+          >
+            <LabelList 
+              dataKey="exitConfidence" 
+              position="center"
+              style={{ 
+                fill: 'white',
+                fontWeight: 'bold',
+                fontSize: '10px'
+              }}
+              formatter={(value: number) => (value > 0 ? `${value}%` : '')}
+            />
+          </Bar>
   
         </BarChart>
       </ResponsiveContainer>
