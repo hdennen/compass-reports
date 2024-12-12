@@ -4,10 +4,7 @@ import { useRef, useState, useEffect } from 'react';
 import { useAssessmentStore } from '../store/assessmentStore';
 import { colors } from './colors';
 import { DownloadButton } from '../components/downloadButton';
-
-const truncateName = (name: string, maxLength: number = 10) => {
-  return name.length > maxLength ? `${name.substring(0, maxLength)}...` : name;
-};
+import { wrapText } from '../utilities';
 
 function calculateChartData(exitConfidenceData: { [key: string]: string[] }): any[] {
   return Object.entries(exitConfidenceData).map(([key, values]) => {
@@ -71,7 +68,7 @@ export function ExitConfidenceDetailedPieChart({ areaName }: ExitConfidencePieCh
       </div>
       <div className="p-6" style={{ 
         width: '100%', 
-        height: Math.ceil(confidenceData.length / 4) * 200 + 100 // 200px per row + padding
+        height: Math.ceil(confidenceData.length / 4) * 200 + 120 // Increased row height to 250px and padding to 150px
       }} ref={chartRef}>
         <ResponsiveContainer width="100%" height="100%">
           <PieChart>
@@ -86,18 +83,27 @@ export function ExitConfidenceDetailedPieChart({ areaName }: ExitConfidencePieCh
               const pieRadius = 80;
               const piesPerRow = 4;
               const xOffset = (index % piesPerRow) * 200 + 110;
-              const yOffset = Math.floor(index / piesPerRow) * 200 + 100;
+              const yOffset = Math.floor(index / piesPerRow) * 250 + 120;
 
               return (
                 <>
-                  <text
-                    x={xOffset}
-                    y={yOffset - 90}
-                    textAnchor="middle"
-                    dominantBaseline="middle"              
-                  >
-                    {entry.name}
-                  </text>
+                  {(() => {
+                    const lines = wrapText(entry.name);
+                    const totalHeight = lines.length * 20; // 20px per line
+                    
+                    return lines.map((line, lineIndex) => (
+                      <text
+                        key={`${entry.name}-line-${lineIndex}`}
+                        x={xOffset}
+                        y={yOffset - 80 - (totalHeight - (lineIndex * 20))} // Position from bottom up
+                        textAnchor="middle"
+                        dominantBaseline="hanging"
+                        className="text"
+                      >
+                        {line}
+                      </text>
+                    ));
+                  })()}
                   <Pie
                     key={entry.name}
                     data={pieData}
