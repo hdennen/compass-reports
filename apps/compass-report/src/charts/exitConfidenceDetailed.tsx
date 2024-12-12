@@ -63,7 +63,7 @@ export function ExitConfidenceDetailedChart({ areaName }: ExitConfidenceChartPro
                   if (!lastGroup || (lastGroup.join(' ').length + word.length + 1 > 20)) {
                     acc.push([word + ' ']);
                   } else {
-                    lastGroup.push(word);
+                    lastGroup.push(word + ' ');
                   }
                   return acc;
                 }, [] as string[][]);
