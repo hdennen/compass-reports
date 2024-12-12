@@ -4,7 +4,7 @@ import { useRef, useState, useEffect } from 'react';
 import { useAssessmentStore } from '../store/assessmentStore';
 import { colors } from './colors';
 import { DownloadButton } from '../components/downloadButton';
-import { wrapText } from '../utilities';
+import { wrapText, toTitleCase } from '../utilities';
 
 function calculateChartData(exitConfidenceData: { [key: string]: string[] }): any[] {
   return Object.entries(exitConfidenceData).map(([key, values]) => {
@@ -88,7 +88,7 @@ export function ExitConfidenceDetailedPieChart({ areaName }: ExitConfidencePieCh
               return (
                 <>
                   {(() => {
-                    const lines = wrapText(entry.name);
+                    const lines = wrapText(toTitleCase(entry.name));
                     const totalHeight = lines.length * 20; // 20px per line
                     
                     return lines.map((line, lineIndex) => (
