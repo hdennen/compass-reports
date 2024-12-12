@@ -110,20 +110,6 @@ export function ExitConfidenceDetailedChart({ areaName }: ExitConfidenceChartPro
             <CartesianGrid stroke="#dadbdd" />
             <ReferenceLine y={0} stroke="#000" />
             <Bar 
-              dataKey="slightlyUnsure" 
-              name="Slightly unsure" 
-              fill={colors[ExitConfidenceNames.SlightlyUnsure]} 
-              stackId="stack"
-              barSize={80}
-            >
-              <LabelList 
-                dataKey="slightlyUnsure" 
-                position="center" 
-                fill="#fff" 
-                formatter={(value: number) => value > 0 ? value : ''} 
-              />
-            </Bar>
-            <Bar 
               dataKey="completelyUnsure" 
               name="Completely unsure" 
               fill={colors[ExitConfidenceNames.CompletelyUnsure]} 
@@ -132,6 +118,20 @@ export function ExitConfidenceDetailedChart({ areaName }: ExitConfidenceChartPro
             >
               <LabelList 
                 dataKey="completelyUnsure" 
+                position="center" 
+                fill="#fff" 
+                formatter={(value: number) => value > 0 ? value : ''} 
+              />
+            </Bar>
+            <Bar 
+              dataKey="slightlyUnsure" 
+              name="Slightly unsure" 
+              fill={colors[ExitConfidenceNames.SlightlyUnsure]} 
+              stackId="stack"
+              barSize={80}
+            >
+              <LabelList 
+                dataKey="slightlyUnsure" 
                 position="center" 
                 fill="#fff" 
                 formatter={(value: number) => value > 0 ? value : ''} 
