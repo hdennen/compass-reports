@@ -12,6 +12,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 - pie chart label text word wrapping
+- fixed missing space in stacked bar labels
 
 
 ## [1.0.0] - 2024-12-11
