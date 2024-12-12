@@ -56,7 +56,7 @@ export function ConfidenceComparison() {
       })
       .filter((item): item is ChartData => item !== null);
     setChartData(newChartData);
-  }, [transformedData, getConfidenceData, responseStore.transformedData]);
+  }, [transformedData, getConfidenceData, responseStore.transformedData, responseStore.selectedCohort]);
 
   return (
     <div className="bg-white rounded-lg shadow-lg p-6 flex flex-col items-center">

@@ -88,7 +88,7 @@ export function SectionAnalysis({ sectionName, sectionKey }: SectionAnalysisProp
       setBelowSeventyQuestions(belowThresholdQuestionsData);
 
     }
-  }, [responseData, sectionKey, threshold]);
+  }, [responseData, sectionKey, threshold, selectedCohort]);
 
   return (
     <div className="bg-white rounded-lg shadow-lg p-6">
