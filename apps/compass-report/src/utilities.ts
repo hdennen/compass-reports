@@ -36,3 +36,14 @@ export function wrapText(text: string, maxWidth: number = 18) {
 export function truncateName(name: string, maxLength: number = 10) {
   return name.length > maxLength ? `${name.substring(0, maxLength)}...` : name;
 }
+
+export function toTitleCase(str: string): string {
+  const excludedWords = ['and'];
+  return str
+    .toLowerCase()
+    .split(' ')
+    .map(word => 
+      excludedWords.includes(word) ? word : word.charAt(0).toUpperCase() + word.slice(1)
+    )
+    .join(' ');
+}
