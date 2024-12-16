@@ -163,7 +163,6 @@ export function ConfidenceComparison() {
             <Bar 
               dataKey="actualKnowledge" 
               name="Assessment Score" 
-              name="Assessment Score" 
               fill={colors.actualKnowledgeBar} 
             >
               <LabelList 

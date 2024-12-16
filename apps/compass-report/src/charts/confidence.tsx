@@ -83,30 +83,6 @@ export function ConfidenceChart() {
                   </g>
                 );
               }}
-              height={80}
-              interval={0}
-              tick={(props) => {
-                const { x, y, payload } = props;
-                const words = payload.value.split(' ');
-                const lineHeight = 16;
-                
-                return (
-                  <g>
-                    {words.map((word: string, index: number) => (
-                      <text
-                        key={index}
-                        x={x}
-                        y={y + 12}
-                        dy={index * lineHeight}
-                        textAnchor="middle"
-                        fill="#666"
-                      >
-                        {word}
-                      </text>
-                    ))}
-                  </g>
-                );
-              }}
             />
             <YAxis 
               yAxisId="left"
