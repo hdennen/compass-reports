@@ -6,9 +6,6 @@ import { ResponseActions, useResponseStore } from '../store/responseStore';
 import { getDisplayName } from '../utilities';
 import { colors } from './colors';
 import { DownloadButton } from '../components/downloadButton';
-import { Label } from 'recharts';
-
-const areaDot = {stroke: '#ffe5a9', strokeWidth: 2, fill: 'white', r: 5};
 
 function calculateChartData(responseStore: ResponseActions, confidenceData: {[key: string]: ConfidenceLevel[]}): any[] {
   const actualKnowledgeData = responseStore.getActualKnowledge();
@@ -140,7 +137,7 @@ export function ConfidenceChart() {
               dataKey="actualAverage" 
               yAxisId="left"
               name="Assessment Score" 
-              dot={areaDot} 
+              dot={{stroke: '#ffe5a9', strokeWidth: 2, fill: 'white', r: 5}}
               stroke={colors.actualKnowledgeAreaStroke}
               strokeWidth={5}
             >
