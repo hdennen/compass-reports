@@ -142,7 +142,7 @@ export function ConfidenceChart() {
               name="Assessment Score" 
               dot={areaDot} 
               stroke={colors.actualKnowledgeAreaStroke}
-              strokeWidth={3}
+              strokeWidth={5}
             >
               <LabelList 
                 dataKey="actualAverage"

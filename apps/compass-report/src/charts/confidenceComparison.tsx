@@ -6,8 +6,6 @@ import {
   CartesianGrid, 
   Tooltip, 
   Legend,
-  LineChart,
-  Line,
   ResponsiveContainer,
   LabelList
 } from 'recharts';
@@ -47,7 +45,7 @@ export function ConfidenceComparison() {
         const displayName = getDisplayName(questionText);
         const actualKnowledge = responseStore.getActualKnowledge()[questionText];
 
-        return {     
+        return {
           area: displayName,
           confidence: Number(averageConfidence.toFixed(2)),
           exitConfidence: Number(averageExitConfidence.toFixed(2)),

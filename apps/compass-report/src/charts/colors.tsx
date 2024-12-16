@@ -3,7 +3,7 @@ import { ExitConfidenceNames } from "../enums";
 export const colors = {
   actualKnowledgeBar: '#D4AF37',
   actualKnowledgeAreaFill: 'rgba(255,205,86,.5)',
-  actualKnowledgeAreaStroke: '#ffe5a9',
+  actualKnowledgeAreaStroke: '#D3B039',
   exitConfidenceBar: '#82ca9d',
   confidenceBar: '#2D78C0',
   [ExitConfidenceNames.CompletelyUnsure]: '#AE3D3D',
