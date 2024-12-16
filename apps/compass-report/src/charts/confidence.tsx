@@ -6,9 +6,6 @@ import { ResponseActions, useResponseStore } from '../store/responseStore';
 import { getDisplayName } from '../utilities';
 import { colors } from './colors';
 import { DownloadButton } from '../components/downloadButton';
-import { Label } from 'recharts';
-
-const areaDot = {stroke: '#ffe5a9', strokeWidth: 2, fill: 'white', r: 5};
 
 function calculateChartData(responseStore: ResponseActions, confidenceData: {[key: string]: ConfidenceLevel[]}): any[] {
   const actualKnowledgeData = responseStore.getActualKnowledge();
@@ -59,30 +56,6 @@ export function ConfidenceChart() {
           <ComposedChart data={chartData} barGap={20}>
             <XAxis
               dataKey="name"
-              height={80}
-              interval={0}
-              tick={(props) => {
-                const { x, y, payload } = props;
-                const words = payload.value.split(' ');
-                const lineHeight = 16;
-                
-                return (
-                  <g>
-                    {words.map((word: string, index: number) => (
-                      <text
-                        key={index}
-                        x={x}
-                        y={y + 12}
-                        dy={index * lineHeight}
-                        textAnchor="middle"
-                        fill="#666"
-                      >
-                        {word}
-                      </text>
-                    ))}
-                  </g>
-                );
-              }}
               height={80}
               interval={0}
               tick={(props) => {
@@ -164,9 +137,9 @@ export function ConfidenceChart() {
               dataKey="actualAverage" 
               yAxisId="left"
               name="Assessment Score" 
-              dot={areaDot} 
+              dot={{stroke: '#ffe5a9', strokeWidth: 2, fill: 'white', r: 5}}
               stroke={colors.actualKnowledgeAreaStroke}
-              strokeWidth={3}
+              strokeWidth={5}
             >
               <LabelList 
                 dataKey="actualAverage"

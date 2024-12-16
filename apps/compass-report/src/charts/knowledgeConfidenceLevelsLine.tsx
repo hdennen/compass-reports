@@ -275,8 +275,9 @@ export function KnowledgeConfidenceLevelsLineChart() {
               dataKey="actualKnowledge" 
               name="Assessment Score" 
               fill={colors.actualKnowledgeBar} 
-              strokeWidth={2}
+              strokeWidth={5}
               stroke="#33FFEE"
+              dot={{stroke: '#ffe5a9', strokeWidth: 2, fill: 'white', r: 5}}
               type="monotone"
             >
               <LabelList 
