@@ -15,6 +15,7 @@ import { KnowledgeConfidenceLevelsLineChart } from '../charts/knowledgeConfidenc
 import { version } from '../version';
 import { BrowserRouter, Routes, Route, Link } from 'react-router-dom';
 import { Changelog } from '../pages/Changelog';
+import { EducationPreferenceChart } from '../charts/educationPreferenceChart';
 
 export function App() {
   const assessmentStore = useAssessmentStore();
@@ -111,6 +112,9 @@ export function App() {
                 </div>
                 <div className="mb-8">
                   <ConfidenceComparison />
+                </div>
+                <div className="mb-8">
+                <EducationPreferenceChart />
                 </div>
                 <div className="mb-8">
                   <SectionAnalysis sectionName={QuestionAreaNames.CodingAndBilling} sectionKey={QuestionAreaKeys.CodingAndBilling} />

@@ -18,7 +18,11 @@ export interface AssessmentActions {
   getConfidenceData: () => {[key: string]: ConfidenceLevel[]};
   getExitConfidenceCounts: () => {[key: string]: { [key: string]: number }};
   getExitConfidenceByArea: <T>(area: QuestionAreaNames, asAverage?: number) => T;
+  getEducationPreferenceRankings: () => { [option: string]: number };
 }
+
+// Constant for the education preference question key
+const EDUCATION_PREFERENCE_QUESTION = "Rank your selection in order of preference with (1) being most preferred and (6) being least preferred. In which of the following formats do you prefer to receive professional continuing education about market access subjects?";
 
 function calculateConfidence(assessmentData: dataEntry<dataEntry>[]): {[key: string]: ConfidenceLevel[]} {
   const confidenceData: {[key: string]: ConfidenceLevel[]} = {};
@@ -57,6 +61,45 @@ export const useAssessmentStore = create<AssessmentState & AssessmentActions>((s
       return calculatedConfidenceData;
     }
     return confidenceData;
+  },
+  getEducationPreferenceRankings: () => {
+    const { transformedData } = get();
+    
+    // Initialize data structure to store ranking values for each option
+    const rankingData: { [option: string]: number[] } = {};
+    
+    // Collect all ranking data
+    transformedData.forEach(respondent => {
+      const educationPreferences = respondent[EDUCATION_PREFERENCE_QUESTION];
+      
+      if (educationPreferences && typeof educationPreferences === 'object') {
+        Object.entries(educationPreferences).forEach(([option, rank]) => {
+          // Ensure the rank is a number between 1-6
+          const numericRank = typeof rank === 'string' ? parseInt(rank, 10) : (typeof rank === 'number' ? rank : NaN);
+          
+          if (!isNaN(numericRank) && numericRank >= 1 && numericRank <= 6) {
+            if (!rankingData[option]) {
+              rankingData[option] = [];
+            }
+            rankingData[option].push(numericRank);
+          }
+          console.log('Ranking Data:', rankingData);
+        });
+      }
+    });
+    
+    // Calculate average ranking for each option
+    const averageRankings: { [option: string]: number } = {};
+    
+    Object.entries(rankingData).forEach(([option, ranks]) => {
+      if (ranks.length > 0) {
+        // Calculate average (lower number = higher preference)
+        const average = ranks.reduce((sum, rank) => sum + rank, 0) / ranks.length;
+        averageRankings[option] = Number(average.toFixed(2)); // Round to 2 decimal places
+      }
+    });
+    
+    return averageRankings;
   },
   getExitConfidenceCounts: () => {
     const { transformedData } = get();
