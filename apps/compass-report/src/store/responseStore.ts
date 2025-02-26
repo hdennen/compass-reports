@@ -71,7 +71,6 @@ export const useResponseStore = create<ResponseState & ResponseActions>((set, ge
     const { rawData } = get();
     try {
       const transformed = transformer(rawData);
-      console.log('Transformed Data:', transformed);
       set({ transformedData: transformed });
     } catch (error) {
       set({ error: error instanceof Error ? error.message : 'Failed to transform data' });

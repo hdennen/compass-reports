@@ -38,7 +38,6 @@ export function ConfidenceChart() {
 
   useEffect(() => {
     if (assessmentStore.transformedData.length > 0) {
-      console.log('Confidence Chart Data has been updated:', assessmentStore.transformedData);
       const confidenceData = assessmentStore.getConfidenceData();
       const calculatedData = calculateChartData(responseStore, confidenceData);
       setChartData(calculatedData);

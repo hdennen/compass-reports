@@ -83,7 +83,6 @@ export const useAssessmentStore = create<AssessmentState & AssessmentActions>((s
             }
             rankingData[option].push(numericRank);
           }
-          console.log('Ranking Data:', rankingData);
         });
       }
     });

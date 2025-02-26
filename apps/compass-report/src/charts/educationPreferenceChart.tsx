@@ -27,8 +27,6 @@ export function EducationPreferenceChart() {
     if (assessmentStore.transformedData.length > 0) {
       const educationPreferencesData = assessmentStore.getEducationPreferenceRankings();
       const calculatedData = calculateChartData(educationPreferencesData);
-      console.log('Education Preferences Data:', educationPreferencesData);
-      console.log('Calculated Data:', calculatedData);
       setChartData(calculatedData);
     }
   }, [assessmentStore.transformedData]);
