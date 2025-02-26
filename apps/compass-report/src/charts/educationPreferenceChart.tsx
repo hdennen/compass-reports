@@ -57,7 +57,7 @@ export function EducationPreferenceChart() {
               type="category" 
               dataKey="option" 
               width={400}
-              tick={{ fontSize: 13 }}
+              tick={{ fontSize: 14 }}
               axisLine={{ stroke: '#E0E0E0' }}
               tickLine={false}
             />
