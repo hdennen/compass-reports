@@ -12,9 +12,11 @@ import { ConfidenceComparison } from '../charts/confidenceComparison';
 import { ExitConfidencePosNegChart } from '../charts/exitConfidencePosNeg';
 import { KnowledgeConfidenceLevelsChart } from '../charts/knowledgeConfidenceLevels';
 import { KnowledgeConfidenceLevelsLineChart } from '../charts/knowledgeConfidenceLevelsLine';
+import { MarketAccessInterestChart } from '../charts/marketAccessInterestChart';
 import { version } from '../version';
 import { BrowserRouter, Routes, Route, Link } from 'react-router-dom';
 import { Changelog } from '../pages/Changelog';
+import { EducationPreferenceChart } from '../charts/educationPreferenceChart';
 
 export function App() {
   const assessmentStore = useAssessmentStore();
@@ -111,6 +113,12 @@ export function App() {
                 </div>
                 <div className="mb-8">
                   <ConfidenceComparison />
+                </div>
+                <div className="mb-8">
+                <EducationPreferenceChart />
+                </div>
+                <div className="mb-8">
+                  <MarketAccessInterestChart />
                 </div>
                 <div className="mb-8">
                   <SectionAnalysis sectionName={QuestionAreaNames.CodingAndBilling} sectionKey={QuestionAreaKeys.CodingAndBilling} />

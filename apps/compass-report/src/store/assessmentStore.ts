@@ -18,7 +18,15 @@ export interface AssessmentActions {
   getConfidenceData: () => {[key: string]: ConfidenceLevel[]};
   getExitConfidenceCounts: () => {[key: string]: { [key: string]: number }};
   getExitConfidenceByArea: <T>(area: QuestionAreaNames, asAverage?: number) => T;
+  getEducationPreferenceRankings: () => { [option: string]: number };
+  getMarketAccessInterestCounts: () => { [contentArea: string]: { [interestLevel: string]: number } };
 }
+
+// Constant for the education preference question key
+const EDUCATION_PREFERENCE_QUESTION = "Rank your selection in order of preference with (1) being most preferred and (6) being least preferred. In which of the following formats do you prefer to receive professional continuing education about market access subjects?";
+
+// Constant for the market access interest question key
+const MARKET_ACCESS_INTEREST_QUESTION = "Market access is a complex and continually evolving landscape. We are committed to helping you stay current with changes that impact patient and provider access. Please rank your level of interest in developing deeper knowledge and better understanding for each of these content areas.";
 
 function calculateConfidence(assessmentData: dataEntry<dataEntry>[]): {[key: string]: ConfidenceLevel[]} {
   const confidenceData: {[key: string]: ConfidenceLevel[]} = {};
@@ -57,6 +65,77 @@ export const useAssessmentStore = create<AssessmentState & AssessmentActions>((s
       return calculatedConfidenceData;
     }
     return confidenceData;
+  },
+  getEducationPreferenceRankings: () => {
+    const { transformedData } = get();
+    
+    // Initialize data structure to store ranking values for each option
+    const rankingData: { [option: string]: number[] } = {};
+    
+    // Collect all ranking data
+    transformedData.forEach(respondent => {
+      const educationPreferences = respondent[EDUCATION_PREFERENCE_QUESTION];
+      
+      if (educationPreferences && typeof educationPreferences === 'object') {
+        Object.entries(educationPreferences).forEach(([option, rank]) => {
+          // Ensure the rank is a number between 1-6
+          const numericRank = typeof rank === 'string' ? parseInt(rank, 10) : (typeof rank === 'number' ? rank : NaN);
+          
+          if (!isNaN(numericRank) && numericRank >= 1 && numericRank <= 6) {
+            if (!rankingData[option]) {
+              rankingData[option] = [];
+            }
+            rankingData[option].push(numericRank);
+          }
+        });
+      }
+    });
+    
+    // Calculate average ranking for each option
+    const averageRankings: { [option: string]: number } = {};
+    
+    Object.entries(rankingData).forEach(([option, ranks]) => {
+      if (ranks.length > 0) {
+        // Calculate average (lower number = higher preference)
+        const average = ranks.reduce((sum, rank) => sum + rank, 0) / ranks.length;
+        averageRankings[option] = Number(average.toFixed(2)); // Round to 2 decimal places
+      }
+    });
+    
+    return averageRankings;
+  },
+  getMarketAccessInterestCounts: () => {
+    const { transformedData } = get();
+    
+    // Initialize data structure to store counts of interest levels for each content area
+    const interestCounts: { [contentArea: string]: { [interestLevel: string]: number } } = {};
+    
+    // Count interest levels for each content area
+    transformedData.forEach(respondent => {
+      const marketAccessInterests = respondent[MARKET_ACCESS_INTEREST_QUESTION];
+      
+      if (marketAccessInterests && typeof marketAccessInterests === 'object') {
+        Object.entries(marketAccessInterests).forEach(([contentArea, interestLevel]) => {
+          // Ensure interest level is one of the expected values
+          if (
+            typeof interestLevel === 'string' && 
+            ["Not interested", "Somewhat interested", "Very interested"].includes(interestLevel)
+          ) {
+            if (!interestCounts[contentArea]) {
+              interestCounts[contentArea] = {
+                "Not interested": 0,
+                "Somewhat interested": 0,
+                "Very interested": 0
+              };
+            }
+            
+            interestCounts[contentArea][interestLevel] += 1;
+          }
+        });
+      }
+    });
+    
+    return interestCounts;
   },
   getExitConfidenceCounts: () => {
     const { transformedData } = get();
@@ -115,7 +194,13 @@ export const useAssessmentStore = create<AssessmentState & AssessmentActions>((s
       let exitConfidenceDataAverageBySubSections: { [key: string]: number } = {};
 
       Object.entries(exitConfidenceData).forEach(([key, values]) => {
-        const average = values.reduce((sum: number, val: number) => sum + ExitConfidenceLevel[val as keyof typeof ExitConfidenceLevel], 0) / values.length;
+        const average = values.reduce((sum: number, val: any) => {
+          const numericValue = typeof val === 'number' ? 
+            val : 
+            ExitConfidenceLevel[val as keyof typeof ExitConfidenceLevel];
+          return sum + numericValue;
+        }, 0) / values.length;
+        
         exitConfidenceDataAverageBySubSections[key] = average;
       });
 
@@ -127,7 +212,12 @@ export const useAssessmentStore = create<AssessmentState & AssessmentActions>((s
       let totalValues = 0;
       let totalEntries = 0;
       Object.entries(exitConfidenceData).forEach(([key, values]) => {
-        totalValues += values.reduce((sum: number, val: number) => sum + ExitConfidenceLevel[val as keyof typeof ExitConfidenceLevel], 0);
+        totalValues += values.reduce((sum: number, val: any) => {
+          const numericValue = typeof val === 'number' ? 
+            val : 
+            ExitConfidenceLevel[val as keyof typeof ExitConfidenceLevel];
+          return sum + numericValue;
+        }, 0);
         totalEntries += values.length;
       });
 
@@ -145,6 +235,7 @@ export const useAssessmentStore = create<AssessmentState & AssessmentActions>((s
     const { rawData } = get();
     try {
       const transformed = transformer(rawData);
+      console.info('Transformed Data:', transformed);
       set({ transformedData: transformed });
     } catch (error) {
       set({ error: error instanceof Error ? error.message : 'Failed to transform data' });
